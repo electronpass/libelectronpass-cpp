@@ -1,2 +1,5 @@
-add_executable(serialization_test serialization_test.cpp)
+add_executable(serialization_test serialization_test.cpp passgenerator_test.cpp)
 target_link_libraries(serialization_test electronpass)
+
+add_executable(passgenerator_test passgenerator_test.cpp)
+target_link_libraries(passgenerator_test electronpass)
