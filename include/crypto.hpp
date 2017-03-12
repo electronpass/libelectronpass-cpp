@@ -4,12 +4,12 @@
 #include <openssl/evp.h>
 #include <openssl/aes.h>
 #include <string>
+#include <iostream>
 
 class Crypto {
 private:
 public:
-    Crypto() {};
-    ~Crypto();
+    Crypto();
 
     bool init(const std::string& key);
     std::string aes_encrypt(const std::string& plain_text);

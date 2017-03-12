@@ -2,4 +2,4 @@ set(SOURCE_FILES
     crypto.cpp
 )
 
-add_library(electronpass ${SOURCE_FILES})
+add_library(electronpass SHARED ${SOURCE_FILES})
