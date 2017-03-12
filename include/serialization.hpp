@@ -19,11 +19,16 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #define ELECTRONPASS_DATA_HPP
 
 #include <json/value.h>
+#include <json/reader.h>
 #include <iostream>
 
-class Serialization {
-    void read();
-};
+namespace electronpass {
+    namespace serialization {
+        void deserialize(const char* const);
+        void serialize();
+    }
+}
+
 
 
 #endif //ELECTRONPASS_DATA_HPP

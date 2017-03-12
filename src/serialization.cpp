@@ -17,8 +17,9 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "serialization.hpp"
 
-void Serialization::read() {
-    std::string json = "{\"mami\": \"oci\", \"test\": 2";
-    Json::Value value(json);
-    std::cout << value.get("mami", "").asString() << std::endl;
+void electronpass::serialization::deserialize(const char* const json) {
+    Json::Value root;
+    Json::Reader reader;
+    reader.parse(json, root);
+    std::cout << root["test"].asBool() << std::endl;
 }
