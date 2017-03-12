@@ -1,0 +1,2 @@
+add_executable(serialization_test serialization_test.cpp)
+target_link_libraries(serialization_test electronpass)

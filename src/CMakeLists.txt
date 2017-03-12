@@ -1,5 +1,6 @@
 set(SOURCE_FILES
-    crypto.cpp
-)
+        crypto.cpp
+        serialization.cpp)
 
 add_library(electronpass SHARED ${SOURCE_FILES})
+target_link_libraries(electronpass jsoncpp)
