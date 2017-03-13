@@ -17,9 +17,11 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "serialization.hpp"
 
-void electronpass::serialization::deserialize(const char* const json) {
+electronpass::data::Wallet electronpass::serialization::deserialize(const char* const json) {
     Json::Value root;
     Json::Reader reader;
     reader.parse(json, root);
     std::cout << root["test"].asBool() << std::endl;
+
+    return {};
 }

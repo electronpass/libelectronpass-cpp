@@ -15,22 +15,34 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ELECTRONPASS_SERIALIZATION_HPP
-#define ELECTRONPASS_SERIALIZATION_HPP
+#ifndef ELECTRONPASS_DATA_HPP
+#define ELECTRONPASS_DATA_HPP
 
-#include <json/value.h>
-#include <json/reader.h>
-#include <iostream>
-
-#include "data.hpp"
+#include <vector>
+#include <map>
+#include <string>
 
 namespace electronpass {
-    namespace serialization {
-        electronpass::data::Wallet deserialize(const char* const);
-        void serialize();
+    namespace data {
+        enum class Type {
+            username, password, email, url, pin
+        };
+
+        struct Field {
+            std::string name;
+            std::string value;
+            Type type;
+            bool sensitive;
+        };
+
+        struct Item {
+            std::string name;
+            std::vector<Field> fields;
+        };
+
+        typedef std::vector<Item> Wallet;
     }
 }
-
 
 
 #endif //ELECTRONPASS_DATA_HPP
