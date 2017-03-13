@@ -28,7 +28,7 @@ namespace electronpass {
         static const std::string uppercase_letters_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         static const std::string special_chars_list = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}";
 
-        std::string generate_pass(int len, bool digits, bool symbols, bool uppercase);
+        std::string generate_pass(int len, int digits, int symbols, int uppercase);
     }
 }
 
