@@ -18,11 +18,11 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ELECTRONPASS_SERIALIZATION_HPP
 #define ELECTRONPASS_SERIALIZATION_HPP
 
-#include <json/value.h>
-#include <json/reader.h>
 #include <string>
 #include <vector>
 
+#include "json/json.h"
+#include "json/json-forwards.h"
 #include "wallet.hpp"
 
 namespace electronpass {
