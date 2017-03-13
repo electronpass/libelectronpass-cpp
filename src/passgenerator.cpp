@@ -18,9 +18,10 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include "passgenerator.hpp"
 #include <random>
 #include <functional>
+#include <iostream>
 
-
-int trueRandomInt(int min, int max) {
+// Seeds and obtains random int between min and max using mt19937 algorithm.
+int true_random_int(int min, int max) {
     std::mt19937 prng;
     std::mt19937::result_type seed = std::random_device{}();
     prng.seed(seed);
@@ -29,16 +30,46 @@ int trueRandomInt(int min, int max) {
     return randGen();
 }
 
-std::string electronpass::passgenerator::generate_pass(int len, bool digits, bool symbols, bool uppercase) {
-
-    std::string dataset = letters_list;
-    if (digits) dataset += digits_list;
-    if (symbols) dataset += special_chars_list;
-    if (uppercase) dataset += uppercase_letters_list;
-
+// Rewrites string without n-th char and returns it.
+std::string rm_char(std::string a, int n) {
     std::string result = "";
-    for (int i = 0; i < len; i++) {
-        result += dataset[trueRandomInt(0, dataset.size() - 1)];
+    for (int i = 0; i < a.size(); i++) {
+        if (i != n) result += a[i];
+    }
+    return result;
+}
+
+// Takes random characters from initial dataset according to numbers provided and shuffles them.
+// If sum of len, digits and symbols is bigger than len, they are filled to fulfill settings respectively.
+std::string electronpass::passgenerator::generate_pass(int len, int digits, int symbols, int uppercase) {
+    // take random characters from initial ones
+    std::string dataset = "";
+    for (int i = 0; i < digits && dataset.size() < len; i++) {
+        dataset += digits_list[true_random_int(0, digits_list.size() - 1)];
+    }
+    for (int i = 0; i < symbols && dataset.size() < len; i++) {
+        dataset += special_chars_list[true_random_int(0, special_chars_list.size() - 1)];
+    }
+    for (int i = 0; i < uppercase && dataset.size() < len; i++) {
+        dataset += uppercase_letters_list[true_random_int(0, uppercase_letters_list.size() - 1)];
+    }
+    for (int i = 0; i < len - dataset.size(); i++) {
+        dataset += letters_list[true_random_int(0, letters_list.size() - 1)];
+    }
+
+    // shuffle dataset
+    std::string result = "";
+    while (result.size() < len) {
+        if (dataset.size() > 1) {
+            // select random char and move it into result
+            int i = true_random_int(0, dataset.size() - 1);
+            result += dataset[i];
+            dataset = rm_char(dataset, i);
+        } else {
+            // handle last remaining char case
+            result += dataset;
+            break;
+        }
     }
     return result;
 }
