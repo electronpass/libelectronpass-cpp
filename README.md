@@ -1,6 +1,11 @@
 # libelectronpass
 Core C++ library for ElectronPass.
 
+## Dependencies
+
+- [jsoncpp](https://github.com/open-source-parsers/jsoncpp)
+- [openssl](https://www.openssl.org)
+
 ## Instalation
 
     mkdir build; cd build
