@@ -5,3 +5,4 @@ set(SOURCE_FILES
         passgenerator.cpp)
 
 add_library(electronpass SHARED ${SOURCE_FILES})
+target_link_libraries(electronpass crypto)
