@@ -3,18 +3,15 @@
 
 #include <openssl/evp.h>
 #include <openssl/aes.h>
+
 #include <string>
-#include <iostream>
 
-class Crypto {
-private:
-public:
-    Crypto();
+namespace electronpass {
+    namespace crypto {
+        std::string aes_encrypt(const std::string& plain_text, const std::string& key);
+        std::string aes_decrypt(const std::string& cipher_text, const std::string& key);
+    }
+}
 
-    bool init(const std::string& key);
-    std::string aes_encrypt(const std::string& plain_text);
-    std::string aes_decrypt(const std::string& chiper_text);
-
-};
 
 #endif // SRC_CRYPTO_HPP_

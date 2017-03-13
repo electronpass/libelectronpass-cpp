@@ -3,3 +3,6 @@ target_link_libraries(serialization_test electronpass)
 
 add_executable(passgenerator_test passgenerator_test.cpp)
 target_link_libraries(passgenerator_test electronpass)
+
+add_executable(crypto_test crypto_test.cpp)
+target_link_libraries(crypto_test electronpass)
