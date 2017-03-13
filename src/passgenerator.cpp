@@ -61,12 +61,12 @@ std::string electronpass::passgenerator::generate_pass(int len, int digits, int 
     std::string result = "";
     while (result.size() < len) {
         if (dataset.size() > 1) {
-            // select random char and insert it into result
+            // select random char and move it into result
             int i = true_random_int(0, dataset.size() - 1);
             result += dataset[i];
             dataset = rm_char(dataset, i);
         } else {
-            // handle last remaining char
+            // handle last remaining char case
             result += dataset;
             break;
         }
