@@ -19,15 +19,26 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <random>
 #include <functional>
 
-int trueRandomInt(int min, int max){
+
+int trueRandomInt(int min, int max) {
     std::mt19937 prng;
     std::mt19937::result_type seed = std::random_device{}();
     prng.seed(seed);
     auto randGen = std::bind(std::uniform_int_distribution<int>(min, max),
-                               std::mt19937(seed));
+                             std::mt19937(seed));
     return randGen();
 }
 
 std::string electronpass::passgenerator::generate_pass(int len, bool digits, bool symbols, bool uppercase) {
-    return "random " + std::to_string(trueRandomInt(0, 99));
+
+    std::string dataset = letters_list;
+    if (digits) dataset += digits_list;
+    if (symbols) dataset += special_chars_list;
+    if (uppercase) dataset += uppercase_letters_list;
+
+    std::string result = "";
+    for (int i = 0; i < len; i++) {
+        result += dataset[trueRandomInt(0, dataset.size() - 1)];
+    }
+    return result;
 }
