@@ -20,17 +20,18 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <json/value.h>
 #include <json/reader.h>
-#include <iostream>
+#include <string>
+#include <vector>
 
-#include "data.hpp"
+#include "wallet.hpp"
 
 namespace electronpass {
     namespace serialization {
-        electronpass::data::Wallet deserialize(const char* const);
+        electronpass::Wallet deserialize(const char* const);
         void serialize();
     }
 }
 
 
 
-#endif //ELECTRONPASS_DATA_HPP
+#endif //ELECTRONPASS_WALLET_HPP

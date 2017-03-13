@@ -15,23 +15,28 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ELECTRONPASS_DATA_HPP
-#define ELECTRONPASS_DATA_HPP
+#ifndef ELECTRONPASS_WALLET_HPP
+#define ELECTRONPASS_WALLET_HPP
 
 #include <vector>
-#include <map>
 #include <string>
 
 namespace electronpass {
-    namespace data {
-        enum class Type {
-            username, password, email, url, pin
+    class Wallet {
+      public:
+        enum class FieldType {
+            username, password, email, url, pin, undefined
         };
 
         struct Field {
+            Field(std::string name, std::string value,
+                  FieldType field_type, bool sensitive): name{name},
+                                                         value{value},
+                                                         field_type{field_type},
+                                                         sensitive{sensitive} {}
             std::string name;
             std::string value;
-            Type type;
+            FieldType field_type;
             bool sensitive;
         };
 
@@ -40,9 +45,10 @@ namespace electronpass {
             std::vector<Field> fields;
         };
 
-        typedef std::vector<Item> Wallet;
-    }
+      private:
+        std::vector<Item> _items;
+    };
 }
 
 
-#endif //ELECTRONPASS_DATA_HPP
+#endif //ELECTRONPASS_WALLET_HPP

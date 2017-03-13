@@ -1,5 +1,5 @@
 #include <iostream>
-#include "data.hpp"
+#include "wallet.hpp"
 #include "serialization.hpp"
 
 int main() {
