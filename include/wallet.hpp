@@ -39,18 +39,12 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  *   - delete_item/s (delete one or more items to the wallet)
  *
  * Item:
- *   - constructor & deconstructor
- *   - variable name
  *   - get_fields (names only)
  *   - set fields (override all fields)
  *   - get_field (get data for specific field)
  *   - set_field (set data for specific field)
  *   - add_field/s (add one or more fields to the item)
  *   - delete_field/s (delete one or more fields from the item)
- *
- * Field:
- *   - constructor & deconstructor
- *   - variables/properties
  */
 
 namespace electronpass {
@@ -65,7 +59,7 @@ namespace electronpass {
          *
          * - username: for storing usernames
          * - password: for storing passwords
-         * - email: for strogin email addresses
+         * - email: for storing email addresses
          * - url: for storing url of website on which the password is used
          * - pin: for storing numeric values
          */
@@ -73,21 +67,77 @@ namespace electronpass {
             username, password, email, url, pin, undefined
         };
 
+        /**
+         * @brief Struct for storing field data.
+         *
+         * Wallet item is constructed of multiple fields, where each field represents one information about the item
+         * eg.: username, password, email, etc.
+         */
         struct Field {
+            /**
+             * @brief Constructor for creating fields with data.
+             * @param name Display name of the field.
+             * @param value Value stored in the field.
+             * @param field_type Type of the field. For more about field types read documentation for
+             * Wallet::FieldType enum.
+             * @param sensitive Should the value stored in the field by hidden by default in the UI.
+             */
             Field(std::string name, std::string value,
                   FieldType field_type, bool sensitive): name{name},
                                                          value{value},
                                                          field_type{field_type},
                                                          sensitive{sensitive} {}
+            /// Constructor for creating an empty field.
+            Field() {}
+
+            /// Display name of the field.
             std::string name;
+            /// Value that is stored in the field.
             std::string value;
+            /// Type of the field. You can read more about field types in documentation for Wallet::FieldType enum.
             FieldType field_type;
+            /// Used by UI to hide sensitive information (eg. password).
             bool sensitive;
         };
 
-        struct Item {
+        /**
+         * @brief Each item represents an entry in the Wallet.
+         *
+         * Wallet item is constructed of multiple fields. For security reasons, interaction with the fields is only
+         * allowed using the class methods.
+         */
+        class Item {
+            std::vector<Field> _fields;
+          public:
+            /// Constructor for creating an empty item.
+            Item() {}
+            /**
+             * @brief Constructor for creating fully populated item.
+             * @param name Display name for the item.
+             * @param fields Fields in the item. For more info about fields read Wallet::Field.
+             */
+
+            Item(std::string name, std::vector<Field> fields): _fields{fields}, name{name} {}
+
+            /**
+             * @brief Constructor for creating item with name and empty fields.
+             * @param name Display name for the item.
+             */
+            Item(std::string name): name{name} {}
+
+            /// Display name for the item.
             std::string name;
-            std::vector<Field> fields;
+
+            /**
+             * @brief Method for reading the fields.
+             *
+             * This method returns the names of the fields for this item. Only names are returned for primarily security
+             * reasons and also memory optimization. You should not rearrange the elements in the vector, because the
+             * index of the element in this vector is used to access more information about the field.
+             *
+             * @return Vector of field names.
+             */
+            std::vector<std::string> get_fields() const;
         };
 
       private:
