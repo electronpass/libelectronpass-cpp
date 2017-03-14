@@ -21,6 +21,12 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <string>
 
+/**
+ * @file wallet.hpp
+ * @author Vid Drobnič <vid.drobnic@gmail.com>
+ * @brief Defined wallet class for storing passwords and intecracting with them.
+ */
+
 /*
  * TODO: Class methods to operate with data
  * Wallet:
@@ -48,8 +54,21 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace electronpass {
+    /**
+     * @brief Class for storing and interacting with passwords.
+     */
     class Wallet {
       public:
+
+        /**
+         * @brief Possible field types.
+         *
+         * - username: for storing usernames
+         * - password: for storing passwords
+         * - email: for strogin email addresses
+         * - url: for storing url of website on which the password is used
+         * - pin: for storing numeric values
+         */
         enum class FieldType {
             username, password, email, url, pin, undefined
         };

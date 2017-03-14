@@ -12,3 +12,5 @@ include_directories(include ${OPENSSL_INCLUDE_DIR})
 
 add_subdirectory(src)
 add_subdirectory(test)
+
+add_custom_target(docs COMMAND doxygen docs/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
