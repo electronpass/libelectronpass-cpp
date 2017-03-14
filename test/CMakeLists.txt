@@ -1,7 +1,7 @@
 add_executable(serialization_test serialization_test.cpp)
 target_link_libraries(serialization_test electronpass)
 
-add_executable(passgenerator_test passgenerator_test.cpp)
+add_executable(passgenerator_test passwords_test.cpp)
 target_link_libraries(passgenerator_test electronpass)
 
 add_executable(crypto_test crypto_test.cpp)

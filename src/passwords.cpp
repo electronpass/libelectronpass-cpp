@@ -41,7 +41,7 @@ std::string rm_char(std::string a, int n) {
 
 // Takes random characters from initial dataset according to numbers provided and shuffles them.
 // If sum of len, digits and symbols is bigger than len, they are filled to fulfill settings respectively.
-std::string electronpass::passgenerator::generate_pass(int len, int digits, int symbols, int uppercase) {
+std::string electronpass::passwords::generate_random_pass(int len, int digits, int symbols, int uppercase) {
     // take random characters from initial ones
     std::string dataset = "";
     for (int i = 0; i < digits && (int) dataset.size() < len; ++i) {

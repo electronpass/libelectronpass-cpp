@@ -21,14 +21,14 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 namespace electronpass {
-    namespace passgenerator {
+    namespace passwords {
         // Set of characters to include when generating passwords
         static const std::string digits_list = "0123456789";
         static const std::string letters_list = "abcdefghijklmnopqrstuvwxyz";
         static const std::string uppercase_letters_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         static const std::string special_chars_list = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}";
 
-        std::string generate_pass(int len, int digits, int symbols, int uppercase);
+        std::string generate_random_pass(int len, int digits, int symbols, int uppercase);
     }
 }
 
