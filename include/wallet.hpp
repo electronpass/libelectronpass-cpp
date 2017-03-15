@@ -27,6 +27,11 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  * @brief Defined wallet class for storing passwords and intecracting with them.
  */
 
+/**
+ * @brief Namespace for all functions and classes in libelectronpass.
+ *
+ * This is the main namespace that libelectronpass uses for its classes and functions.
+ */
 namespace electronpass {
     /**
      * @brief Class for storing and interacting with passwords.
