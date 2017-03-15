@@ -25,7 +25,7 @@ You can also use make to generate documentation with:
 ## License
 Code in this project is licensed under [GNU LGPLv3 license](https://github.com/electronpass/libelectronpass/blob/master/LICENSE.LESSER). Some third party files are subjective to their respective license.
 
-###JsonCpp
+### JsonCpp
 [JsonCpp](https://github.com/open-source-parsers/jsoncpp) is licensed under the MIT license. Used files are:
 
 - ```include/json/*```

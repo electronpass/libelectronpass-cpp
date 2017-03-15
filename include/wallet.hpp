@@ -68,17 +68,17 @@ namespace electronpass {
         struct Field {
             /**
              * @brief Constructor for creating fields with data.
-             * @param name Display name of the field.
-             * @param value Value stored in the field.
-             * @param field_type Type of the field. For more about field types read documentation for
+             * @param name_ Display name of the field.
+             * @param value_ Value stored in the field.
+             * @param field_type_ Type of the field. For more about field types read documentation for
              * Wallet::FieldType enum.
-             * @param sensitive Should the value stored in the field by hidden by default in the UI.
+             * @param sensitive_ Should the value stored in the field by hidden by default in the UI.
              */
-            Field(std::string name, std::string value,
-                  FieldType field_type, bool sensitive): name{name},
-                                                         value{value},
-                                                         field_type{field_type},
-                                                         sensitive{sensitive} {}
+            Field(const std::string& name_, const std::string& value_,
+                  const FieldType& field_type_, bool sensitive_): name{name_},
+                                                                  value{value_},
+                                                                  field_type{field_type_},
+                                                                  sensitive{sensitive_} {}
             /// Constructor for creating an empty field.
             Field() {}
 
@@ -105,17 +105,17 @@ namespace electronpass {
             Item() {}
             /**
              * @brief Constructor for creating fully populated item.
-             * @param name Display name for the item.
-             * @param fields Fields in the item. For more info about fields read Wallet::Field.
+             * @param name_ Display name for the item.
+             * @param fields_ Fields in the item. For more info about fields read Wallet::Field.
              */
 
-            Item(std::string name, std::vector<Field> fields): _fields{fields}, name{name} {}
+            Item(const std::string& name_, const std::vector<Field>& fields_): _fields{fields_}, name{name_} {}
 
             /**
              * @brief Constructor for creating item with name and empty fields.
-             * @param name Display name for the item.
+             * @param name_ Display name for the item.
              */
-            Item(std::string name): name{name} {}
+            Item(const std::string& name_): name{name_} {}
 
             /// Display name for the item.
             std::string name;
@@ -140,7 +140,7 @@ namespace electronpass {
              *
              * @param fields Fields that should be set to this item.
              */
-            void set_fields(std::vector<Field> fields);
+            void set_fields(const std::vector<Field>& fields);
 
             /**
              * @brief Get a specific field from item.
