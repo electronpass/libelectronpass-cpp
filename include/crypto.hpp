@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SRC_CRYPTO_HPP_
-#define SRC_CRYPTO_HPP_
+#ifndef ELECTRONPASS_CRYPTO_HPP
+#define ELECTRONPASS_CRYPTO_HPP
 
 #include <openssl/evp.h>
 #include <openssl/aes.h>
@@ -32,6 +32,8 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 
 namespace electronpass {
+
+    /// @brief Namespace for cryptographics functions and helper functions.
     namespace crypto {
 
         /**
@@ -56,4 +58,4 @@ namespace electronpass {
 }
 
 
-#endif // SRC_CRYPTO_HPP_
+#endif // ELECTRONPASS_CRYPTO_HPP
