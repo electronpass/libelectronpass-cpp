@@ -42,14 +42,14 @@ namespace electronpass {
         /**
          * @brief Possible field types.
          *
-         * - username: for storing usernames
-         * - password: for storing passwords
-         * - email: for storing email addresses
-         * - url: for storing url of website on which the password is used
-         * - pin: for storing numeric values
+         * - USERNAME: for storing usernames
+         * - PASSWORD: for storing passwords
+         * - EMAIL: for storing email addresses
+         * - URL: for storing url of website on which the password is used
+         * - PIN: for storing numeric values
          */
         enum class FieldType {
-            username, password, email, url, pin, undefined
+            USERNAME, PASSWORD, EMAIL, URL, PIN, UNDEFINED
         };
 
         /**

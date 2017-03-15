@@ -21,17 +21,17 @@ using namespace electronpass;
 
 Wallet::FieldType string_to_field_type(const std::string& type_string) {
     if (type_string == "username")
-        return Wallet::FieldType::username;
+        return Wallet::FieldType::USERNAME;
     if (type_string == "password")
-        return Wallet::FieldType::password;
+        return Wallet::FieldType::PASSWORD;
     if (type_string == "email")
-        return Wallet::FieldType::email;
+        return Wallet::FieldType::EMAIL;
     if (type_string == "url")
-        return Wallet::FieldType::url;
+        return Wallet::FieldType::URL;
     if (type_string == "pin")
-        return Wallet::FieldType::pin;
+        return Wallet::FieldType::PIN;
 
-    return Wallet::FieldType::undefined;
+    return Wallet::FieldType::UNDEFINED;
 }
 
 
