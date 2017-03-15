@@ -1,0 +1,5 @@
+/**
+@mainpage This is documentation for <a href="https://github.com/electronpass/libelectronpass" target="_blank">libelectronpass</a>.
+
+libelectronpass is core library for opensource password password manager <a href="https://github.com/electronpass" target="_blank">ElectronPass</a>.
+*/
