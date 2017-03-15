@@ -49,7 +49,7 @@ namespace electronpass {
          * - pin: for storing numeric values
          */
         enum class FieldType {
-            username, password, email, url, pin, undefined
+            USERNAME, PASSWORD, EMAIL, URL, PIN, UNDEFINED
         };
 
         /**
