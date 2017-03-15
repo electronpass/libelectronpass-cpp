@@ -25,10 +25,25 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include "json/json-forwards.h"
 #include "wallet.hpp"
 
+/**
+ * @file serialization.hpp
+ * @author Vid Drobnič <vid.drobnic@gmail.com>
+ * @brief Defined serialization functions for serialization and deserialization of JSON data.
+ */
+
 namespace electronpass {
+    /**
+     * @brief Functions for serialization and deserialization of JSON data.
+     */
     namespace serialization {
-        electronpass::Wallet deserialize(const char* const);
-        void serialize();
+        /**
+         * @brief Deserialize JSON data and create Wallet object from it.
+         *
+         * @param json JSON to deserialize.
+         * @return Wallet object generated from JSON data.
+         */
+        electronpass::Wallet deserialize(const std::string& json);
+
     }
 }
 

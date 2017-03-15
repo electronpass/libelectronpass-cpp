@@ -35,27 +35,33 @@ Wallet::FieldType string_to_field_type(const std::string& type_string) {
 }
 
 
-Wallet serialization::deserialize(const char* const json) {
+Wallet serialization::deserialize(const std::string& json) {
     Json::Value root;
     Json::Reader reader;
-    reader.parse(json, root);
+    reader.parse(json.c_str(), root);
 
-    Json::Value items = root["items"];
-    for (Json::Value item : items) {
-        std::string name = item["name"].asString();
+    std::vector<Wallet::Item> items;
+
+    Json::Value raw_items = root["items"];
+    for (Json::Value raw_item : raw_items) {
+        std::string name = raw_item["name"].asString();
 
         std::vector<Wallet::Field> fields;
 
-        Json::Value raw_fields = item["fields"];
-        for (Json::Value field : raw_fields) {
-            std::string field_name = field["name"].asString();
-            std::string field_value = field["value"].asString();
-            bool sensitive = field["sensitive"].asBool();
-            Wallet::FieldType type = string_to_field_type(field["type"].asString());
+        Json::Value raw_fields = raw_item["fields"];
+        for (Json::Value raw_field : raw_fields) {
+            std::string field_name = raw_field["name"].asString();
+            std::string field_value = raw_field["value"].asString();
+            bool sensitive = raw_field["sensitive"].asBool();
+            Wallet::FieldType field_type = string_to_field_type(raw_field["type"].asString());
 
-            Wallet::Field field_object(field_name, field_value, type, sensitive);
+            Wallet::Field field(field_name, field_value, field_type, sensitive);
+            fields.push_back(field);
         }
+
+        Wallet::Item item(name, fields);
+        items.push_back(item);
     }
 
-    return {};
+    return Wallet(items);
 }
