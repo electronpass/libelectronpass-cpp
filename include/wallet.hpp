@@ -39,10 +39,6 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  *   - delete_item/s (delete one or more items to the wallet)
  *
  * Item:
- *   - get_fields (names only)
- *   - set fields (override all fields)
- *   - get_field (get data for specific field)
- *   - set_field (set data for specific field)
  *   - add_field/s (add one or more fields to the item)
  *   - delete_field/s (delete one or more fields from the item)
  */
@@ -138,6 +134,70 @@ namespace electronpass {
              * @return Vector of field names.
              */
             std::vector<std::string> get_fields() const;
+
+            /**
+             * @brief Method for setting the fields.
+             *
+             * This methods overrides all existing fields with the fields that you provide as the parameter. It can be
+             * used if you want to populate the fields of the item after it has been initialized.
+             *
+             * @param fields Fields that should be set to this item.
+             */
+            void set_fields(std::vector<Field> fields);
+
+            /**
+             * @brief Get a specific field from item.
+             *
+             * Error codes:
+             * - 0: success
+             * - 1: index out of bounds error
+             *
+             * @param index Index of the field. Index is the same as the index from get_fields method.
+             * @param error Error is set to 0 if no error occurred. For other error codes look at the detailed description.
+             * @return Field that you requested.
+             */
+            Field get_field(int index, int& error) const;
+
+            /**
+             * @brief Set a field at specific index to new Field.
+             *
+             * Field with this index must already exist. This method is used to override the field when, for instance,
+             * user edits the field.
+             *
+             * Error codes:
+             * - 0: success
+             * - 1: index out of bounds error
+             *
+             * @param index Index of the field that should be set.
+             * @param field New field that will be saved.
+             * @param error Error is set to 0 if no error occurred. For other error codes look at the detailed description.
+             */
+            void set_field(int index, const Field& field, int& error);
+
+            /**
+             * @brief Add a field to the item.
+             *
+             * This method is used to append a field to the item (for instance when user adds another field to the item).
+             * For adding multiple fields at the same time look at the add_fields() method.
+             *
+             * @param field Field that should be added.
+             */
+            void add_field(const Field& field);
+
+            /**
+             * @brief Delete a field from the item.
+             *
+             * This method is used to delete the field from the item (for instance, when user deletes the field).
+             *
+             * Error codes:
+             * - 0: success
+             * - 1: index out of bounds
+             *
+             * @param index Index of the item that should be deleted.
+             * @param error Error is set to 0 if no error occurred. For other error codes look at the detailed description.
+             * @return Deleted field.
+             */
+            Field delete_field(int index, int& error);
         };
 
       private:
