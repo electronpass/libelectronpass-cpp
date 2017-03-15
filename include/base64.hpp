@@ -23,34 +23,29 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * @file base64.hpp
  * @author Matej Marinko <matejmarinko123@gmail.com>
- * @brief Functions for Base63 encoding and decoding.
+ * @brief Functions for Base64 encoding and decoding.
  */
 
 namespace electronpass {
     namespace crypto {
 
+        /// All chars in Base64.
+        static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
         /**
          * @brief Function for encoding to Base64.
-         * @param bytes Input bytes, which will be converted to Base64 string.
-         * @return Base64 string.
+         * @param String, which will be encoded in Base64.
+         * @return Encoded string.
          */
-        std::string base64_encode(const unsigned char* bytes);
+        std::string base64_encode(std::string s);
 
         /**
          * @brief Function for decoding from Base64.
-         * @param base64_string String, which will be decoded from Base64.
-         * @param bytes Char buffer where decoded bytes, will be saved. Needs to be large enough.
-         * @return Number of characters written in bytes buffer.
+         * @param base64_bytes String, which will be decoded from Base64.
+         * @return Decoded string.
          */
-        int base64_decode(const std::string& base64_string, unsigned char* bytes);
+        std::string base64_decode(std::string s);
 
-        /**
-         * @brief Calculates informative length of decoded string in Base64.
-         * Length will be for sure large enough, but can be larger than the actual decoded length.
-         * @param length Length of string encoded in Base64.
-         * @return Informative length of decoded string.
-         */
-        int base64_decoded_length(int length);
     }
 }
 

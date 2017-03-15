@@ -85,10 +85,15 @@ std::string electronpass::crypto::aes_encrypt(const std::string& plain_text, con
 
     cipher_tmp[cipher_len] = '\0';
 
+    std::string cipher_text(cipher_len, ' ');
+    // first set string len, because if we created string directly from cipher_tmp,
+    // \0 could teminate string and we wolud lost any further data.
+    for (int i = 0; i < cipher_len; ++i) {
+        cipher_text.at(i) = static_cast<char>(cipher_tmp[i]);
+    }
+
     // TODO: convert to BASE64
     // if there is value of '\0' in cipher_tmp, cipher_text will be shorter and thus wrong value.
-
-    std::string cipher_text(reinterpret_cast<char*>(cipher_tmp));
 
     assert(static_cast<unsigned int>(cipher_len) == cipher_text.length());
 
@@ -104,7 +109,14 @@ std::string electronpass::crypto::aes_decrypt(const std::string& cipher_text, co
     unsigned char *cipher_chars = new unsigned char[cipher_len];
     unsigned char *password_chars = new unsigned char[pass_len];
 
-    strcpy(reinterpret_cast<char*>(cipher_chars), cipher_text.c_str());
+    // TODO: convert from Base64.
+
+    // copy 1 char at once. Cant use strcopy here, because there could be \0 char,
+    // whicw will termiate the string.
+    for (int i = 0; i < cipher_len; ++i) {
+        cipher_chars[i] = static_cast<unsigned char>(cipher_text.at(i));
+    }
+
     strcpy(reinterpret_cast<char*>(password_chars), password.c_str());
 
     unsigned char aes_key[32], aes_iv[16];
