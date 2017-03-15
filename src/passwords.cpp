@@ -21,6 +21,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include <algorithm>
 #include <set>
+#include <cassert>
 
 // Seeds and obtains random int between min and max using mt19937 algorithm.
 int true_random_int(int min, int max) {
@@ -95,6 +96,31 @@ std::string electronpass::passwords::generate_random_pass(int len) {
     return result;
 }
 
+
+electronpass::passwords::PASSWORD_STRENGTH electronpass::passwords::double_to_password_strength(double d) {
+    if (d < 0.002) return PASSWORD_STRENGTH::terrible;
+    else if (d < 0.005) return PASSWORD_STRENGTH::bad;
+    else if (d < 0.05) return PASSWORD_STRENGTH::moderate;
+    else if (d < 0.09) return PASSWORD_STRENGTH::good;
+    else return PASSWORD_STRENGTH::very_strong;
+}
+
+std::string electronpass::passwords::password_strength_to_str(PASSWORD_STRENGTH e) {
+    switch (e) {
+        case PASSWORD_STRENGTH::terrible:
+            return "terrible";
+        case PASSWORD_STRENGTH::bad:
+            return "bad";
+        case PASSWORD_STRENGTH::moderate:
+            return "moderate";
+        case PASSWORD_STRENGTH::good:
+            return "good";
+        case PASSWORD_STRENGTH::very_strong:
+            return "very strong";
+    }
+    assert(false && "No such enum state!");
+}
+
 double electronpass::passwords::password_strength(std::string password) {
     std::set<char> all_chars = {};
     int digits = 0;
@@ -149,4 +175,13 @@ double electronpass::passwords::password_strength(std::string password) {
 
     //scale and return result
     return static_cast<double>(std::min(static_cast<double>((result / (max_result / pow(10, 11)))), 1.0));
+}
+
+
+electronpass::passwords::PASSWORD_STRENGTH electronpass::passwords::password_strength_category(std::string password) {
+    return double_to_password_strength(password_strength(password));
+}
+
+std::string electronpass::passwords::human_readable_password_strength_category(std::string password) {
+    return password_strength_to_str(password_strength_category(password));
 }

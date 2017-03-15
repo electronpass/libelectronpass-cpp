@@ -49,6 +49,13 @@ namespace electronpass {
         };
 
         /**
+         * @brief Enum to classify password strength.
+         */
+        enum class PASSWORD_STRENGTH {
+            terrible, bad, moderate, good, very_strong
+        };
+
+        /**
          * @brief Generates random password.
          * @param len Desired length of password.
          * @param digits Number of digits to be included.
@@ -83,6 +90,34 @@ namespace electronpass {
          * @return Double between 0 and 1 representing strength (0 is terribly bad, 1 is good).
          */
         double password_strength(std::string password);
+
+        /**
+         * @brief Calculates password strength and casts it into PASSWORD_STRENGTH enum.
+         * @param password Password to evaluate.
+         * @return PASSWORD_STRENGTH enum.
+         */
+        PASSWORD_STRENGTH password_strength_category(std::string password);
+
+        /**
+         * @brief Returns human-readable strength category using common password_strength method.
+         * @param password Password to evaluate.
+         * @return Human-readable string.
+         */
+        std::string human_readable_password_strength_category(std::string password);
+
+        /**
+         * @brief Casts double from password_strength to enum PASSWORD_STRENGTH.
+         * @param d Double to cast.
+         * @return PASSWORD_STRENGTH enum.
+         */
+        PASSWORD_STRENGTH double_to_password_strength(double d);
+
+        /**
+         * @brief Casts e to human-readable string.
+         * @param e Enum to cast.
+         * @return Human-readable string.
+         */
+        std::string password_strength_to_str(PASSWORD_STRENGTH e);
     }
 }
 
