@@ -27,18 +27,6 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  * @brief Defined wallet class for storing passwords and intecracting with them.
  */
 
-/*
- * TODO: Class methods to operate with data
- * Wallet:
- *   - constructor & deconstructor
- *   - get_items (names only)
- *   - set_items (override all items)
- *   - get_item (get data for specific item)
- *   - set_item (set data for specific items)
- *   - add_item/s (add one or more items to the wallet)
- *   - delete_item/s (delete one or more items to the wallet)
- */
-
 namespace electronpass {
     /**
      * @brief Class for storing and interacting with passwords.
@@ -72,7 +60,7 @@ namespace electronpass {
              * @param value_ Value stored in the field.
              * @param field_type_ Type of the field. For more about field types read documentation for
              * Wallet::FieldType enum.
-             * @param sensitive_ Should the value stored in the field by hidden by default in the UI.
+             * @param sensitive_ Should the value stored in the field be hidden by default in the UI.
              */
             Field(const std::string& name_, const std::string& value_,
                   const FieldType& field_type_, bool sensitive_): name{name_},
@@ -99,7 +87,7 @@ namespace electronpass {
          * allowed using the class methods.
          */
         class Item {
-            std::vector<Field> _fields;
+            std::vector<Field> fields;
           public:
             /// Constructor for creating an empty item.
             Item() {}
@@ -109,7 +97,7 @@ namespace electronpass {
              * @param fields_ Fields in the item. For more info about fields read Wallet::Field.
              */
 
-            Item(const std::string& name_, const std::vector<Field>& fields_): _fields{fields_}, name{name_} {}
+            Item(const std::string& name_, const std::vector<Field>& fields_): fields{fields_}, name{name_} {}
 
             /**
              * @brief Constructor for creating item with name and empty fields.
@@ -154,51 +142,95 @@ namespace electronpass {
              * @return Field that you requested.
              */
             Field get_field(int index, int& error) const;
-
-            /**
-             * @brief Set a field at specific index to new Field.
-             *
-             * Field with this index must already exist. This method is used to override the field when, for instance,
-             * user edits the field.
-             *
-             * Error codes:
-             * - 0: success
-             * - 1: index out of bounds error
-             *
-             * @param index Index of the field that should be set.
-             * @param field New field that will be saved.
-             * @param error Error is set to 0 if no error occurred. For other error codes look at the detailed description.
-             */
-            void set_field(int index, const Field& field, int& error);
-
-            /**
-             * @brief Add a field to the item.
-             *
-             * This method is used to append a field to the item (for instance when user adds another field to the item).
-             * For adding multiple fields at the same time look at the add_fields() method.
-             *
-             * @param field Field that should be added.
-             */
-            void add_field(const Field& field);
-
-            /**
-             * @brief Delete a field from the item.
-             *
-             * This method is used to delete the field from the item (for instance, when user deletes the field).
-             *
-             * Error codes:
-             * - 0: success
-             * - 1: index out of bounds
-             *
-             * @param index Index of the item that should be deleted.
-             * @param error Error is set to 0 if no error occurred. For other error codes look at the detailed description.
-             * @return Deleted field.
-             */
-            Field delete_field(int index, int& error);
         };
 
+
+        /// Constructor for creating empty wallet.
+        Wallet() {};
+
+        /**
+         * @brief Constructor for creating wallet populated with items.
+         * @param items_ Items that should be stored in the wallet.
+         */
+        Wallet(const std::vector<Item>& items_): items{items_} {}
+
+        /**
+         * @brief Method for reading the items.
+         *
+         * This method returns the names of all items. Only names are returned for primarily security
+         * reasons and also memory optimization. You should not rearrange the elements in the vector, because the
+         * indices of the elements act as the ids by which you can modify specific
+         * elements with other methods in this class.
+         *
+         * @return Vector of item names.
+         */
+        std::vector<std::string> get_items() const;
+
+        /**
+         * @brief Method for setting the items.
+         *
+         * This methods overrides all existing items with the items that you provide as the parameter. It can be
+         * used if you want to populate the items after the wallet has been initialized.
+         *
+         * @param items Items that should be stored in the wallet.
+         */
+        void set_items(const std::vector<Item>& items);
+
+        /**
+         * @brief Get a specific item.
+         *
+         * Error codes:
+         * - 0: success
+         * - 1: index out of bounds error
+         *
+         * @param index Index of the item.  Index is the same as the index from get_items method.
+         * @param error Error is set to 0 if no error occured. For other error codes look at the detailed description.
+         * @return
+         */
+        Item get_item(int index, int& error) const;
+
+        /**
+         * @brief Set an item at specific index to new Item.
+         *
+         * Item with this index must already exist. This method is used to override the item when, for instance, user
+         * edits the item.
+         *
+         * Error codes:
+         * - 0: success
+         * - 1: index out of bounds error
+         *
+         * @param index Index of the field that should be set.
+         * @param item The item that will be set
+         * @param error Error is set to appropriate error code. For error codes look at the detailed description.
+         */
+        void set_item(int index, const Item& item, int& error);
+
+        /**
+         * @brief Add an item to the wallet.
+         *
+         * This method is used to append an item to the wallet (for instance when user adds another item(password entry)).
+         *
+         * @param item Item that should be added.
+         */
+        void add_item(const Item& item);
+
+        /**
+         * @brief Delete an item from the wallet.
+         *
+         * This method is used to delete an item from the wallet (for instance, when user deletes an item(password)).
+         *
+         * Error codes:
+         * - 0: success
+         * - 1: index out of bounds
+         *
+         * @param index Index of the item that should be deleted.
+         * @param error Error is set to appropriate error code. For error codes look at the detailed description.
+         * @return Deleted item.
+         */
+        Item delete_item(int index, int& error);
+
       private:
-        std::vector<Item> _items;
+        std::vector<Item> items;
     };
 }
 
