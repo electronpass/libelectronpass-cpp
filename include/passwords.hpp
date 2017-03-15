@@ -74,7 +74,7 @@ namespace electronpass {
          * @details meaning passwords shorter than 6 are very bad and repeating characters are fairly bad.
          * @details Then, bad (different than random) character distribution is taken into account.
          * @details @f[ a = a - 10^{-8}a(abs(avg\_digits\_share-digits\_share)* ... *abs(avg\_symbols\_share-symbols\_share))@f]
-         * @details Furthermore, for every occurrence of \"bad phrase\" in bad_phrases a is devided by 2, making those phrases fairly bad.
+         * @details Furthermore, for every occurrence of \"bad phrase\" in bad_phrases, a is devided by 2, making those phrases fairly bad.
          * @details At the end, a is scaled between 0 and 1.
          * @details @f[ min(a*10^{11}/2^{52}, 1) @f]
          * @return Double between 0 and 1 representing strength (0 is terribly bad, 1 is good).
