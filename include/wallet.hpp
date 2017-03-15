@@ -37,10 +37,6 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  *   - set_item (set data for specific items)
  *   - add_item/s (add one or more items to the wallet)
  *   - delete_item/s (delete one or more items to the wallet)
- *
- * Item:
- *   - add_field/s (add one or more fields to the item)
- *   - delete_field/s (delete one or more fields from the item)
  */
 
 namespace electronpass {
@@ -129,7 +125,8 @@ namespace electronpass {
              *
              * This method returns the names of the fields for this item. Only names are returned for primarily security
              * reasons and also memory optimization. You should not rearrange the elements in the vector, because the
-             * index of the element in this vector is used to access more information about the field.
+             * indices of the elements act as the ids by which you can modify specific
+             * elements with other methods in this class.
              *
              * @return Vector of field names.
              */
