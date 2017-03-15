@@ -23,7 +23,7 @@ static bool is_base64(unsigned char c) {
   // is alphanumeric
 }
 
-std::string electronpass::crypto::base64_encode(std::string s) {
+std::string electronpass::crypto::base64_encode(const std::string& s) {
     std::string result;
     int len = s.length();
     int s_counter = 0;
@@ -65,7 +65,7 @@ std::string electronpass::crypto::base64_encode(std::string s) {
 }
 
 
-std::string electronpass::crypto::base64_decode(std::string s) {
+std::string electronpass::crypto::base64_decode(const std::string& s) {
     std::string result;
     int len = s.size();
     int i = 0, counter = 0;

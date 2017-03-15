@@ -16,6 +16,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "crypto.hpp"
+#include "base64.hpp"
 #include <string.h>
 #include <string>
 #include <cassert>

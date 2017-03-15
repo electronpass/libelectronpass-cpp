@@ -29,22 +29,22 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 namespace electronpass {
     namespace crypto {
 
-        /// All chars in Base64.
+        /** @brief All chars in Base64. */
         static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
         /**
          * @brief Function for encoding to Base64.
-         * @param String, which will be encoded in Base64.
+         * @param s String, which will be encoded in Base64.
          * @return Encoded string.
          */
-        std::string base64_encode(std::string s);
+        std::string base64_encode(const std::string& s);
 
         /**
          * @brief Function for decoding from Base64.
-         * @param base64_bytes String, which will be decoded from Base64.
+         * @param s String, which will be decoded from Base64.
          * @return Decoded string.
          */
-        std::string base64_decode(std::string s);
+        std::string base64_decode(const std::string& s);
 
     }
 }
