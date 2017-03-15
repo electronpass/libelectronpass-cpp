@@ -19,6 +19,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <random>
 #include <functional>
 #include <iostream>
+#include <set>
 
 // Seeds and obtains random int between min and max using mt19937 algorithm.
 int true_random_int(int min, int max) {
@@ -39,7 +40,6 @@ std::string rm_char(std::string a, int n) {
     return result;
 }
 
-// Takes random characters from initial dataset according to numbers provided and shuffles them.
 // If sum of len, digits and symbols is bigger than len, they are filled to fulfill settings respectively.
 std::string electronpass::passwords::generate_random_pass(int len, int digits, int symbols, int uppercase) {
     // take random characters from initial ones
@@ -72,4 +72,12 @@ std::string electronpass::passwords::generate_random_pass(int len, int digits, i
         }
     }
     return result;
+}
+
+double electronpass::passwords::password_strength(std::string password) {
+    std::set<char> chars = {};
+    for(char a : password){
+        chars.insert(a);
+    }
+    std::cout << "" << std::endl;
 }
