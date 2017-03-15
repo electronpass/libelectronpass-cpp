@@ -4,6 +4,7 @@ set(SOURCE_FILES
         serialization.cpp
         passwords.cpp
         base64.cpp
+        wallet.cpp
     )
 
 add_library(electronpass SHARED ${SOURCE_FILES})

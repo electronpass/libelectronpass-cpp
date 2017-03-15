@@ -146,7 +146,7 @@ namespace electronpass {
              * @param error Error is set to 0 if no error occurred. For other error codes look at the detailed description.
              * @return Field that you requested.
              */
-            Field get_field(int index, int& error) const;
+            Field get_field(unsigned int index, int& error) const;
         };
 
 
@@ -192,7 +192,7 @@ namespace electronpass {
          * @param error Error is set to 0 if no error occured. For other error codes look at the detailed description.
          * @return
          */
-        Item get_item(int index, int& error) const;
+        Item get_item(unsigned int index, int& error) const;
 
         /**
          * @brief Set an item at specific index to new Item.
@@ -208,7 +208,7 @@ namespace electronpass {
          * @param item The item that will be set
          * @param error Error is set to appropriate error code. For error codes look at the detailed description.
          */
-        void set_item(int index, const Item& item, int& error);
+        void set_item(unsigned int index, const Item& item, int& error);
 
         /**
          * @brief Add an item to the wallet.
@@ -232,7 +232,7 @@ namespace electronpass {
          * @param error Error is set to appropriate error code. For error codes look at the detailed description.
          * @return Deleted item.
          */
-        Item delete_item(int index, int& error);
+        Item delete_item(unsigned int index, int& error);
 
       private:
         std::vector<Item> items;
