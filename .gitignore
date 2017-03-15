@@ -3,6 +3,8 @@ lib/*
 bin/*
 .idea/*
 cmake-build-debug/*
+docs/html/*
+docs/latex/*
 
 # Compiled Object files
 *.slo
