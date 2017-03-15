@@ -39,7 +39,7 @@ namespace electronpass {
         const std::string special_chars_list = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}";
 
         /// Vector including some bad phrases to be included in password.
-        static const std::vector<std::string> bad_phrases = {
+        const std::vector<std::string> bad_phrases = {
                 "123", "234", "345",
                 "567", "678", "789",
                 "890", "101", "asdf",
