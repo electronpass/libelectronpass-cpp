@@ -59,8 +59,24 @@ namespace electronpass {
         std::string generate_random_pass(int len, int digits, int symbols, int uppercase);
 
         /**
+         * @brief Generates random password.
+         * @param len Desired length of password.
+         * @details Characters are selected using mt19937 algorithm and C++ device_random seed.
+         * @return String of desired length.
+         */
+        std::string generate_random_pass(int len);
+
+        /**
          * @brief Evaluates password strength.
          * @param password Password to be inspected.
+         * @details Password (referenced as p) strength (referenced as a) is evaluated using following algorithm:
+         * @details @f[ a = 2^{len(p) - 6 + len(set(p))} @f]
+         * @details meaning passwords shorter than 6 are very bad and repeating characters are fairly bad.
+         * @details Then, bad (different than random) character distribution is taken into account.
+         * @details @f[ a = a - 10^{-8}a(abs(avg\_digits\_share-digits\_share)* ... *abs(avg\_symbols\_share-symbols\_share))@f]
+         * @details Furthermore, for every occurrence of \"bad phrase\" in bad_phrases a is devided by 2, making those phrases fairly bad.
+         * @details At the end, a is scaled between 0 and 1.
+         * @details @f[ min(a*10^{11}/2^{52}, 1) @f]
          * @return Double between 0 and 1 representing strength (0 is terribly bad, 1 is good).
          */
         double password_strength(std::string password);
