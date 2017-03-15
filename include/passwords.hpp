@@ -28,6 +28,9 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace electronpass {
+    /**
+     * @brief Methods for password generation and strength evaluation.
+     */
     namespace passwords {
         /// Set of digits to include in random password generation .
         const std::string digits_list = "0123456789";
@@ -43,6 +46,13 @@ namespace electronpass {
                 "123", "234", "345",
                 "567", "678", "789",
                 "890", "101", "asdf",
+        };
+
+        /**
+         * @brief Enum to classify password strength.
+         */
+        enum class PASSWORD_STRENGTH {
+            terrible, bad, moderate, good, very_strong
         };
 
         /**
@@ -74,12 +84,40 @@ namespace electronpass {
          * @details meaning passwords shorter than 6 are very bad and repeating characters are fairly bad.
          * @details Then, bad (different than random) character distribution is taken into account.
          * @details @f[ a = a - 10^{-8}a(abs(avg\_digits\_share-digits\_share)* ... *abs(avg\_symbols\_share-symbols\_share))@f]
-         * @details Furthermore, for every occurrence of \"bad phrase\" in bad_phrases a is devided by 2, making those phrases fairly bad.
+         * @details Furthermore, for every occurrence of \"bad phrase\" in bad_phrases, a is devided by 2, making those phrases fairly bad.
          * @details At the end, a is scaled between 0 and 1.
          * @details @f[ min(a*10^{11}/2^{52}, 1) @f]
          * @return Double between 0 and 1 representing strength (0 is terribly bad, 1 is good).
          */
         double password_strength(std::string password);
+
+        /**
+         * @brief Calculates password strength and casts it into PASSWORD_STRENGTH enum.
+         * @param password Password to evaluate.
+         * @return PASSWORD_STRENGTH enum.
+         */
+        PASSWORD_STRENGTH password_strength_category(std::string password);
+
+        /**
+         * @brief Returns human-readable strength category using common password_strength method.
+         * @param password Password to evaluate.
+         * @return Human-readable string.
+         */
+        std::string human_readable_password_strength_category(std::string password);
+
+        /**
+         * @brief Casts double from password_strength to enum PASSWORD_STRENGTH.
+         * @param d Double to cast.
+         * @return PASSWORD_STRENGTH enum.
+         */
+        PASSWORD_STRENGTH double_to_password_strength(double d);
+
+        /**
+         * @brief Casts e to human-readable string.
+         * @param e Enum to cast.
+         * @return Human-readable string.
+         */
+        std::string password_strength_to_str(PASSWORD_STRENGTH e);
     }
 }
 
