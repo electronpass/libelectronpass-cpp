@@ -28,6 +28,9 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace electronpass {
+    /**
+     * @brief Methods for password generation and strength evaluation.
+     */
     namespace passwords {
         /// Set of digits to include in random password generation .
         const std::string digits_list = "0123456789";
