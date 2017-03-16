@@ -3,8 +3,8 @@ Core C++ library for ElectronPass.
 
 ## Dependencies
 
-- [jsoncpp v1.8.0](https://github.com/open-source-parsers/jsoncpp)
-- [openssl](https://www.openssl.org)
+- [openssl](https://www.openssl.org) - comes built in with most linux distros
+- [jsoncpp v1.8.0](https://github.com/open-source-parsers/jsoncpp) - now already included in source code 
 
 ## Building
 
