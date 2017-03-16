@@ -3,6 +3,13 @@
 
 using namespace electronpass::passwords;
 
+const std::vector<std::string> sample_passwords = {
+        "neki", "lineageosas", "lineageosas101",
+        "lineageosas", "lineageosasasd", "asdfasdfasdf101",
+        "danesjelepdan123", "danesjelepdanasd"
+
+};
+
 int main() {
     // test random passwords
     for (int i = 1; i < 35; i++) {
@@ -12,30 +19,19 @@ int main() {
     }
 
     // test some real passwords
-    std::string pass = "neki";
-    std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
-              << std::endl;
-    pass = "lineageosas";
-    std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
-              << std::endl;
-    pass = "lineageosas101";
-    std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
-              << std::endl;
-    pass = "lineageosas";
-    std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
-              << std::endl;
-    pass = "lineageosasasd";
-    std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
-              << std::endl;
-    pass = "asdfasdfasdf101";
-    std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
-              << std::endl;
-    pass = "danesjelepdan123";
-    std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
-              << std::endl;
-    pass = "danesjelepdanasd";
-    std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
-              << std::endl;
+    for(std::string pass : sample_passwords){
+        std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
+                  << std::endl;
+    }
 
+    // let user pick some passwords to test
+    std::string pass;
+    std::cout << std::endl;
+    while(true) {
+        std::cout << "Pick a password to test: ";
+        std::cin >> pass;
+        std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
+                  << std::endl;
+    }
     return 0;
 }
