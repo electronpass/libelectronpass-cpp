@@ -19,13 +19,8 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace electronpass;
 
-std::vector<std::string> Wallet::get_items() const {
-    std::vector<std::string> names;
-    for (auto item : items) {
-        names.push_back(item.name);
-    }
-
-    return names;
+std::vector<Wallet::Item> Wallet::get_items() const {
+    return items;
 }
 
 void Wallet::set_items(const std::vector<Item>& items_) {
@@ -67,25 +62,10 @@ Wallet::Item Wallet::delete_item(unsigned int index, int &error) {
     return item;
 }
 
-std::vector<std::string> Wallet::Item::get_fields() const {
-    std::vector<std::string> names;
-    for (Field field : fields) {
-        names.push_back(field.name);
-    }
-
-    return names;
+std::vector<Wallet::Field> Wallet::Item::get_fields() const {
+    return fields;
 }
 
 void Wallet::Item::set_fields(const std::vector<Field> &fields_) {
     fields = fields_;
-}
-
-Wallet::Field Wallet::Item::get_field(unsigned int index, int &error) const {
-    if (index >= fields.size()) {
-        error = 1;
-        return Field();
-    }
-
-    error = 0;
-    return fields[index];
 }

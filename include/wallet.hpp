@@ -116,14 +116,11 @@ namespace electronpass {
             /**
              * @brief Method for reading the fields.
              *
-             * This method returns the names of the fields for this item. Only names are returned for primarily security
-             * reasons and also memory optimization. You should not rearrange the elements in the vector, because the
-             * indices of the elements act as the ids by which you can modify specific
-             * elements with other methods in this class.
+             * This method returns all fields in this item.
              *
-             * @return Vector of field names.
+             * @return Vector of fields.
              */
-            std::vector<std::string> get_fields() const;
+            std::vector<Field> get_fields() const;
 
             /**
              * @brief Method for setting the fields.
@@ -134,19 +131,6 @@ namespace electronpass {
              * @param fields Fields that should be set to this item.
              */
             void set_fields(const std::vector<Field>& fields);
-
-            /**
-             * @brief Get a specific field from item.
-             *
-             * Error codes:
-             * - 0: success
-             * - 1: index out of bounds error
-             *
-             * @param index Index of the field. Index is the same as the index from get_fields method.
-             * @param error Error is set to 0 if no error occurred. For other error codes look at the detailed description.
-             * @return Field that you requested.
-             */
-            Field get_field(unsigned int index, int& error) const;
         };
 
 
@@ -162,14 +146,13 @@ namespace electronpass {
         /**
          * @brief Method for reading the items.
          *
-         * This method returns the names of all items. Only names are returned for primarily security
-         * reasons and also memory optimization. You should not rearrange the elements in the vector, because the
+         * This method returns all items in the Wallet. You should not rearrange the elements in the vector, because the
          * indices of the elements act as the ids by which you can modify specific
          * elements with other methods in this class.
          *
          * @return Vector of item names.
          */
-        std::vector<std::string> get_items() const;
+        std::vector<Item> get_items() const;
 
         /**
          * @brief Method for setting the items.

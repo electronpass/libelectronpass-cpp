@@ -44,6 +44,14 @@ namespace electronpass {
          */
         electronpass::Wallet deserialize(const std::string& json);
 
+        /**
+         * @brief Serialize Wallet object to JSON data.
+         *
+         * @param wallet Wallet to serialize.
+         * @return JSON string.
+         */
+        std::string serialize(const Wallet& wallet);
+
     }
 }
 

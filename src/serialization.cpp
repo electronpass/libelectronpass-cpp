@@ -34,6 +34,23 @@ Wallet::FieldType string_to_field_type(const std::string& type_string) {
     return Wallet::FieldType::UNDEFINED;
 }
 
+std::string field_type_to_string(const Wallet::FieldType& field_type) {
+    switch (field_type) {
+        case Wallet::FieldType::USERNAME:
+            return "username";
+        case Wallet::FieldType::PASSWORD:
+            return "password";
+        case Wallet::FieldType::EMAIL:
+            return "email";
+        case Wallet::FieldType::URL:
+            return "url";
+        case Wallet::FieldType::PIN:
+            return "pin";
+        default:
+            return "undefined";
+    }
+}
+
 
 Wallet serialization::deserialize(const std::string& json) {
     Json::Value root;
@@ -64,4 +81,32 @@ Wallet serialization::deserialize(const std::string& json) {
     }
 
     return Wallet(items);
+}
+
+std::string serialization::serialize(const Wallet &wallet) {
+    Json::Value root;
+
+    std::vector<Wallet::Item> items = wallet.get_items();
+    for (unsigned int i = 0; i < items.size(); ++i) {
+        Json::Value item;
+        item["name"] = items[i].name;
+
+        std::vector<Wallet::Field> fields = items[i].get_fields();
+        Json::Value json_fields;
+        for (unsigned int j = 0; j < fields.size(); ++j) {
+            Json::Value field;
+            field["name"] = fields[j].name;
+            field["type"] = field_type_to_string(fields[j].field_type);
+            field["value"] = fields[j].value;
+            field["sensitive"] = fields[j].sensitive;
+            json_fields[j] = field;
+        }
+
+        item["fields"] = json_fields;
+        root["items"][i] = item;
+    }
+
+    Json::StreamWriterBuilder builder;
+    builder.settings_["indentation"] = "";
+    return Json::writeString(builder, root);
 }

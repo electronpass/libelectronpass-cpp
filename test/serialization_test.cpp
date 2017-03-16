@@ -15,19 +15,8 @@ int main() {
 
     Wallet wallet = electronpass::serialization::deserialize(json);
 
-    std::vector<std::string> items = wallet.get_items();
-    for (unsigned int i = 0; i < items.size(); ++i) {
-        std::cout << items[i] << std::endl;
-        std::cout << "Fields:" << std::endl;
-
-        int error;
-        Wallet::Item item = wallet.get_item(i, error);
-        std::vector<std::string> fields = item.get_fields();
-        for (unsigned int j = 0; j < fields.size(); ++j) {
-            std::cout << "- " << fields[j] << std::endl;
-        }
-        std::cout << std::endl;
-    }
+    std::string generated_json = electronpass::serialization::serialize(wallet);
+    std::cout << generated_json << std::endl;
 
 
 
