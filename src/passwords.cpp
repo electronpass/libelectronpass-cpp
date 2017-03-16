@@ -97,25 +97,25 @@ std::string electronpass::passwords::generate_random_pass(int len) {
 }
 
 
-electronpass::passwords::PASSWORD_STRENGTH electronpass::passwords::double_to_password_strength(double d) {
-    if (d < 0.002) return PASSWORD_STRENGTH::terrible;
-    else if (d < 0.005) return PASSWORD_STRENGTH::bad;
-    else if (d < 0.05) return PASSWORD_STRENGTH::moderate;
-    else if (d < 0.09) return PASSWORD_STRENGTH::good;
-    else return PASSWORD_STRENGTH::very_strong;
+electronpass::passwords::strength_category electronpass::passwords::double_to_password_strength(double d) {
+    if (d < 0.002) return strength_category::TERRIBLE;
+    else if (d < 0.005) return strength_category::BAD;
+    else if (d < 0.05) return strength_category::MODERATE;
+    else if (d < 0.09) return strength_category::GOOD;
+    else return strength_category::VERY_STRONG;
 }
 
-std::string electronpass::passwords::password_strength_to_str(PASSWORD_STRENGTH e) {
+std::string electronpass::passwords::password_strength_category_to_str(strength_category e) {
     switch (e) {
-        case PASSWORD_STRENGTH::terrible:
+        case strength_category::TERRIBLE:
             return "terrible";
-        case PASSWORD_STRENGTH::bad:
+        case strength_category::BAD:
             return "bad";
-        case PASSWORD_STRENGTH::moderate:
+        case strength_category::MODERATE:
             return "moderate";
-        case PASSWORD_STRENGTH::good:
+        case strength_category::GOOD:
             return "good";
-        case PASSWORD_STRENGTH::very_strong:
+        case strength_category::VERY_STRONG:
             return "very strong";
     }
     assert(false && "No such enum state!");
@@ -178,10 +178,10 @@ double electronpass::passwords::password_strength(std::string password) {
 }
 
 
-electronpass::passwords::PASSWORD_STRENGTH electronpass::passwords::password_strength_category(std::string password) {
+electronpass::passwords::strength_category electronpass::passwords::password_strength_category(std::string password) {
     return double_to_password_strength(password_strength(password));
 }
 
 std::string electronpass::passwords::human_readable_password_strength_category(std::string password) {
-    return password_strength_to_str(password_strength_category(password));
+    return password_strength_category_to_str(password_strength_category(password));
 }

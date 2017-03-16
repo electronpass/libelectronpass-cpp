@@ -51,8 +51,8 @@ namespace electronpass {
         /**
          * @brief Enum to classify password strength.
          */
-        enum class PASSWORD_STRENGTH {
-            terrible, bad, moderate, good, very_strong
+        enum class strength_category {
+            TERRIBLE, BAD, MODERATE, GOOD, VERY_STRONG
         };
 
         /**
@@ -94,9 +94,9 @@ namespace electronpass {
         /**
          * @brief Calculates password strength and casts it into PASSWORD_STRENGTH enum.
          * @param password Password to evaluate.
-         * @return PASSWORD_STRENGTH enum.
+         * @return strength_category enum.
          */
-        PASSWORD_STRENGTH password_strength_category(std::string password);
+        strength_category password_strength_category(std::string password);
 
         /**
          * @brief Returns human-readable strength category using common password_strength method.
@@ -106,18 +106,18 @@ namespace electronpass {
         std::string human_readable_password_strength_category(std::string password);
 
         /**
-         * @brief Casts double from password_strength to enum PASSWORD_STRENGTH.
+         * @brief Casts double from password_strength to enum strength_category.
          * @param d Double to cast.
          * @return PASSWORD_STRENGTH enum.
          */
-        PASSWORD_STRENGTH double_to_password_strength(double d);
+        strength_category double_to_password_strength(double d);
 
         /**
          * @brief Casts e to human-readable string.
          * @param e Enum to cast.
          * @return Human-readable string.
          */
-        std::string password_strength_to_str(PASSWORD_STRENGTH e);
+        std::string password_strength_category_to_str(strength_category e);
     }
 }
 
