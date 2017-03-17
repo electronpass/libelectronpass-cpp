@@ -18,8 +18,5 @@ int main() {
     std::string generated_json = electronpass::serialization::serialize(wallet);
     std::cout << generated_json << std::endl;
 
-
-
-
     return 0;
 }

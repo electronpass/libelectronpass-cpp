@@ -59,7 +59,7 @@ namespace electronpass {
 
         /**
          * @brief AES 256 cbc encryption implementation.
-         * We use OpenSSL library fron encryption.
+         * We use OpenSSL library for encryption.
          *
          * Error codes:
          * - 0: success
@@ -76,8 +76,8 @@ namespace electronpass {
         std::string aes_encrypt(const std::string& plain_text, int& error);
 
         /**
-         * @brief AES 256 cbc decryption implementation with.
-         * We use OpenSSL library fron encryption.
+         * @brief AES 256 cbc decryption implementation.
+         * We use OpenSSL library for encryption.
          *
          * Error codes:
          * - 0: success

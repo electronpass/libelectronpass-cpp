@@ -97,7 +97,7 @@ std::string electronpass::Crypto::aes_encrypt(const std::string& plain_text, int
 
     std::string cipher_text(cipher_len, ' ');
     // first set string len, because if we created string directly from cipher_tmp,
-    // \0 could teminate string and we wolud lost any further data.
+    // \0 could terminate string and we would loose any further data.
     for (int i = 0; i < cipher_len; ++i) {
         cipher_text.at(i) = static_cast<char>(cipher_tmp[i]);
     }
@@ -118,8 +118,8 @@ std::string electronpass::Crypto::aes_decrypt(const std::string& cipher_text, in
     const int cipher_len = decoded_cipher_text.length();
     unsigned char *cipher_chars = new unsigned char[cipher_len];
 
-    // copy 1 char at once. Cant use strcopy here, because there could be \0 char,
-    // whicw will termiate the string.
+    // Copy 1 char at once. Can't use strcopy here, because there could be \0 char,
+    // which will terminate the string.
     for (int i = 0; i < cipher_len; ++i) {
         cipher_chars[i] = static_cast<unsigned char>(decoded_cipher_text.at(i));
     }
