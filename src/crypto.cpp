@@ -16,17 +16,28 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "crypto.hpp"
-#include "base64.hpp"
 #include <string.h>
 #include <string>
 #include <cassert>
 #include <iostream>
 
-// TODO: BASE64 conversion of files.
 // Lot of help from: https://securityblog.gr/2803/openssl-aes-256-cbc-encryption-in-c/
 
-bool generate_keys(const unsigned char *password, int pass_len, unsigned char *aes_key,
-                                                                unsigned char *aes_iv) {
+electronpass::Crypto::Crypto(std::string password) {
+    int length = password.length();
+    unsigned char *password_chars = new unsigned char[length];
+
+    strcpy(reinterpret_cast<char*>(password_chars), password.c_str());
+
+    bool success = generate_keys(password_chars, length);
+    if (success) keys_generated = true;
+}
+
+bool electronpass::Crypto::check_keys() {
+    return keys_generated;
+}
+
+bool electronpass::Crypto::generate_keys(const unsigned char *password, int pass_len) {
     int AES_ROUNDS = 5;
     // instead of NULL there should be salt!
     bool success = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, password, pass_len,
@@ -34,26 +45,19 @@ bool generate_keys(const unsigned char *password, int pass_len, unsigned char *a
     return success;
 }
 
-std::string electronpass::crypto::aes_encrypt(const std::string& plain_text, const std::string& password) {
+std::string electronpass::Crypto::aes_encrypt(const std::string& plain_text) {
     // convert strings to char arrays
     const int plain_len = plain_text.length();
-    const int pass_len = password.length();
     unsigned char *plain_chars = new unsigned char[plain_len];
-    unsigned char *password_chars = new unsigned char[pass_len];
 
     strcpy(reinterpret_cast<char*>(plain_chars), plain_text.c_str());
-    strcpy(reinterpret_cast<char*>(password_chars), password.c_str());
 
-    unsigned char aes_key[32], aes_iv[16];
-
-    int success = generate_keys(password_chars, pass_len, aes_key, aes_iv);
-    if (success != 1) return "";
-    free(password_chars);
+    if (!check_keys()) return "";
 
 	EVP_CIPHER_CTX *ctx;
     ctx = EVP_CIPHER_CTX_new();
 
-    success = EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, aes_key, aes_iv);
+    bool success = EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, aes_key, aes_iv);
     if (success != 1) {  // cleanup
         if (ctx) EVP_CIPHER_CTX_free(ctx);
         return "";
@@ -93,43 +97,33 @@ std::string electronpass::crypto::aes_encrypt(const std::string& plain_text, con
         cipher_text.at(i) = static_cast<char>(cipher_tmp[i]);
     }
 
-    // TODO: convert to BASE64
-    // if there is value of '\0' in cipher_tmp, cipher_text will be shorter and thus wrong value.
-
     assert(static_cast<unsigned int>(cipher_len) == cipher_text.length());
+
+    cipher_text = base64_encode(cipher_text);
 
     if (cipher_tmp) free(cipher_tmp);
 
     return cipher_text;
 }
 
-std::string electronpass::crypto::aes_decrypt(const std::string& cipher_text, const std::string& password) {
-    // convert strings to char arrays
-    const int cipher_len = cipher_text.length();
-    const int pass_len = password.length();
-    unsigned char *cipher_chars = new unsigned char[cipher_len];
-    unsigned char *password_chars = new unsigned char[pass_len];
+std::string electronpass::Crypto::aes_decrypt(const std::string& cipher_text) {
+    std::string decoded_cipher_text = base64_decode(cipher_text);
 
-    // TODO: convert from Base64.
+    const int cipher_len = decoded_cipher_text.length();
+    unsigned char *cipher_chars = new unsigned char[cipher_len];
 
     // copy 1 char at once. Cant use strcopy here, because there could be \0 char,
     // whicw will termiate the string.
     for (int i = 0; i < cipher_len; ++i) {
-        cipher_chars[i] = static_cast<unsigned char>(cipher_text.at(i));
+        cipher_chars[i] = static_cast<unsigned char>(decoded_cipher_text.at(i));
     }
 
-    strcpy(reinterpret_cast<char*>(password_chars), password.c_str());
-
-    unsigned char aes_key[32], aes_iv[16];
-
-    int success = generate_keys(password_chars, pass_len, aes_key, aes_iv);
-    if (success != 1) return "";
-    free(password_chars);
+    if (!check_keys()) return "";
 
     EVP_CIPHER_CTX *ctx;
     ctx = EVP_CIPHER_CTX_new();
 
-    success = EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, aes_key, aes_iv);
+    bool success = EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, aes_key, aes_iv);
     if (success != 1) {  // cleanup
         if (ctx) EVP_CIPHER_CTX_free(ctx);
         return "";

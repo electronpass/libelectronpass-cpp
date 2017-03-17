@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "base64.hpp"
+#include "crypto.hpp"
 #include <iostream>
 
 static bool is_base64(unsigned char c) {
@@ -23,7 +23,7 @@ static bool is_base64(unsigned char c) {
   // is alphanumeric
 }
 
-std::string electronpass::crypto::base64_encode(const std::string& s) {
+std::string electronpass::Crypto::base64_encode(const std::string& s) {
     std::string result;
     int len = s.length();
     int s_counter = 0;
@@ -42,7 +42,7 @@ std::string electronpass::crypto::base64_encode(const std::string& s) {
             new_chars[2] = ((chars[1] & 0b00001111) << 2) + ((chars[2] & 0b11000000) >> 6);
             new_chars[3] = chars[2] & 0b00111111;
 
-            for (int j = 0; j < 4; ++j) result += electronpass::crypto::base64_chars[new_chars[j]];
+            for (int j = 0; j < 4; ++j) result += BASE64_CHARS[new_chars[j]];
             i = 0;
         }
     }
@@ -55,7 +55,7 @@ std::string electronpass::crypto::base64_encode(const std::string& s) {
         new_chars[2] = ((chars[1] & 0b00001111) << 2) + ((chars[2] & 0b11000000) >> 6);
         new_chars[3] = chars[2] & 0b00111111;
 
-        for (int j = 0; j < i + 1; ++j) result += electronpass::crypto::base64_chars[new_chars[j]];
+        for (int j = 0; j < i + 1; ++j) result += BASE64_CHARS[new_chars[j]];
 
         while (i++ < 3) result += '=';
 
@@ -65,7 +65,7 @@ std::string electronpass::crypto::base64_encode(const std::string& s) {
 }
 
 
-std::string electronpass::crypto::base64_decode(const std::string& s) {
+std::string electronpass::Crypto::base64_decode(const std::string& s) {
     std::string result;
     int len = s.size();
     int i = 0, counter = 0;
@@ -77,7 +77,7 @@ std::string electronpass::crypto::base64_decode(const std::string& s) {
 
         if (i == 4) {
             // find indices
-            for (int j = 0; j < 4; ++j) chars[j] = electronpass::crypto::base64_chars.find(chars[j]);
+            for (int j = 0; j < 4; ++j) chars[j] = BASE64_CHARS.find(chars[j]);
 
             new_chars[0] = (chars[0] << 2) + ((chars[1] & 0b110000) >> 4);
             new_chars[1] = ((chars[1] & 0b001111) << 4) + ((chars[2] & 0b111100) >> 2);
@@ -91,7 +91,7 @@ std::string electronpass::crypto::base64_decode(const std::string& s) {
     if (i) {
         for (int j = i; j < 4; ++j) chars[j] = 0;
 
-        for (int j = 0; j < 4; ++j) chars[j] = electronpass::crypto::base64_chars.find(chars[j]);
+        for (int j = 0; j < 4; ++j) chars[j] = BASE64_CHARS.find(chars[j]);
 
         new_chars[0] = (chars[0] << 2) + ((chars[1] & 0b110000) >> 4);
         new_chars[1] = ((chars[1] & 0b001111) << 4) + ((chars[2] & 0b111100) >> 2);

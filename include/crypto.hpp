@@ -30,11 +30,26 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  * @brief Defined encryption and decryption functions.
  */
 
-
 namespace electronpass {
+    /** @brief All chars in Base64. */
+    static const std::string BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    /// @brief Namespace for cryptographics functions and helper functions.
-    namespace crypto {
+    /// Class for cryptographics functions and helper functions.
+    class Crypto {
+      private:
+        unsigned char aes_key[32], aes_iv[16];
+        bool keys_generated = false;
+
+        bool generate_keys(const unsigned char *password, int pass_len);
+
+      public:
+
+        /**
+         * @brief Constructor. Creates AES keys from password.
+         * Use Crypto.check_keys() before encryption.
+         * @param password password string.
+         */
+        Crypto(std::string password);
 
         /**
          * @brief AES 256 cbc encryption implementation.
@@ -44,7 +59,7 @@ namespace electronpass {
          * @param password Password from which will be generated aes key and initialization vector.
          * @return encrypted plain_text.
          */
-        std::string aes_encrypt(const std::string& plain_text, const std::string& password);
+        std::string aes_encrypt(const std::string& plain_text);
 
         /**
          * @brief AES 256 cbc decryption implementation with.
@@ -53,8 +68,29 @@ namespace electronpass {
          * @param password Password from which will be generated aes key and initialization vector.
          * @return decrypted cipher text.
          */
-        std::string aes_decrypt(const std::string& cipher_text, const std::string& password);
-    }
+        std::string aes_decrypt(const std::string& cipher_text);
+
+        /**
+         * @brief Check if key generating was successful.
+         * @return true if keys were generated and false otherwise.
+         */
+        bool check_keys();
+
+
+        /**
+         * @brief Function for encoding to Base64.
+         * @param s String, which will be encoded in Base64.
+         * @return Encoded string.
+         */
+        static std::string base64_encode(const std::string& s);
+
+        /**
+         * @brief Function for decoding from Base64.
+         * @param s String, which will be decoded from Base64.
+         * @return Decoded string.
+         */
+        static std::string base64_decode(const std::string& s);
+    };
 }
 
 
