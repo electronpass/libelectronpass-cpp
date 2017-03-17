@@ -31,8 +31,14 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace electronpass {
-    /** @brief All chars in Base64. */
+    //// All chars in Base64.
     static const std::string BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    /// Salt used for generating encryption keys.
+    static const unsigned char AES_SALT[8] = {0xfb, 0x78, 0xca, 0x93, 0x4c, 0x31, 0xb8, 0xd9};
+
+    /// Number of hashes before generating keys from password.
+    static const int AES_ROUNDS = 5;
 
     /// Class for cryptographics functions and helper functions.
     class Crypto {

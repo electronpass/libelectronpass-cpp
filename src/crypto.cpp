@@ -38,9 +38,8 @@ bool electronpass::Crypto::check_keys() {
 }
 
 bool electronpass::Crypto::generate_keys(const unsigned char *password, int pass_len) {
-    int AES_ROUNDS = 5;
-    // instead of NULL there should be salt!
-    bool success = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), NULL, password, pass_len,
+    
+    bool success = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), AES_SALT, password, pass_len,
                                     AES_ROUNDS, aes_key, aes_iv);
     return success;
 }
