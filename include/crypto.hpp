@@ -54,21 +54,37 @@ namespace electronpass {
         /**
          * @brief AES 256 cbc encryption implementation.
          * We use OpenSSL library fron encryption.
+         *
+         * Error codes:
+         * - 0: success
+         * - 1: check_keys() returned false
+         * - 2: encrypt init failed
+         * - 3: encrypt update failed
+         * - 4: encrypt final failed
+         *
          * Encrypted string is converted to Base64 and then returned.
          * @param plain_text Input string, which will be encrypted.
-         * @param password Password from which will be generated aes key and initialization vector.
+         * @param error Integer in where error will be stored.
          * @return encrypted plain_text.
          */
-        std::string aes_encrypt(const std::string& plain_text);
+        std::string aes_encrypt(const std::string& plain_text, int& error);
 
         /**
          * @brief AES 256 cbc decryption implementation with.
          * We use OpenSSL library fron encryption.
+         *
+         * Error codes:
+         * - 0: success
+         * - 1: check_keys() returned false
+         * - 2: encrypt init failed
+         * - 3: encrypt update failed
+         * - 4: encrypt final failed
+         *
          * @param cipher_text Input string in Base64, which will be converted to unsigned char* and decrypted.
-         * @param password Password from which will be generated aes key and initialization vector.
+         * @param error Integer in where error will be stored.
          * @return decrypted cipher text.
          */
-        std::string aes_decrypt(const std::string& cipher_text);
+        std::string aes_decrypt(const std::string& cipher_text, int& error);
 
         /**
          * @brief Check if key generating was successful.
