@@ -18,10 +18,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ELECTRONPASS_CRYPTO_HPP
 #define ELECTRONPASS_CRYPTO_HPP
 
-#include <openssl/evp.h>
-#include <openssl/aes.h>
-#include <openssl/err.h>
-
+#include <sodium.h>
 #include <string>
 
 /**
@@ -34,70 +31,66 @@ namespace electronpass {
     //// All chars in Base64.
     static const std::string BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    /// Salt used for generating encryption keys.
-    static const unsigned char AES_SALT[8] = {0xfb, 0x78, 0xca, 0x93, 0x4c, 0x31, 0xb8, 0xd9};
+    // Salt used for generating encryption keys.
+    static const unsigned char CRYPTO_SALT[crypto_pwhash_scryptsalsa208sha256_SALTBYTES] = {  // 32 bytes
+        0xf4, 0x78, 0x2a, 0x93, 0x4c, 0x56, 0xb8, 0xd9,
+        0xfb, 0x66, 0xca, 0xb6, 0x43, 0x31, 0xb8, 0xd9,
+        0xb5, 0x78, 0x33, 0x96, 0xaa, 0xbf, 0xb8, 0x01,
+        0xfb, 0x90, 0xca, 0x02, 0x4c, 0x31, 0xa6, 0x11
+    };
 
-    /// Number of hashes before generating keys from password.
-    static const int AES_ROUNDS = 5;
+    // Nonce used for ChaCha20-Poly1305 encryption
+    static const unsigned char CRYPTO_NONCE[crypto_aead_chacha20poly1305_NPUBBYTES] = {  // 8 bytes
+        0x12, 0xa0, 0xf7, 0x3a, 0x3e, 0x4b, 0x3a, 0x54};
 
     /// Class for cryptographics functions and helper functions.
     class Crypto {
       private:
-        unsigned char aes_key[32], aes_iv[16];
-        bool keys_generated = false;
 
-        bool generate_keys(const unsigned char *password, int pass_len);
+        // Key for encryption
+        unsigned char key[crypto_box_SEEDBYTES];  // 32 bytes
+        // if key was generated from password, if libsodium init was successful
+        bool sodium_success = false;
+
+        // Generates key from sha256 hash of password.
+        bool generate_key(const char *password, unsigned int pass_len);
 
       public:
 
         /**
-         * @brief Constructor. Creates AES keys from password.
-         * Use Crypto.check_keys() before encryption.
-         * @param password password string.
+         * @brief Constructor
+         * @param password Password, from which encryption key will be generated.
          */
         Crypto(std::string password);
 
         /**
-         * @brief AES 256 cbc encryption implementation.
-         * We use OpenSSL library for encryption.
-         *
-         * Error codes:
-         * - 0: success
-         * - 1: check_keys() returned false
-         * - 2: encrypt init failed
-         * - 3: encrypt update failed
-         * - 4: encrypt final failed
-         *
-         * Encrypted string is converted to Base64 and then returned.
-         * @param plain_text Input string, which will be encrypted.
-         * @param error Integer in where error will be stored.
-         * @return encrypted plain_text.
+         * @brief Encrypts plain text.
+         * We use ChaCha20-Poly1305 authenticated encryption algorithm, implemented in library libsodium.
+         * @param plain_text String, which will be encrypted.
+         * @param success If encryption was successful. See also check().
+         * @return Encrypted plain text, already converted to Base64. If encrypton wasn't successful
+         * returns empty string.
          */
-        std::string aes_encrypt(const std::string& plain_text, int& error);
+        std::string encrypt(const std::string& plain_text, bool& success);
 
         /**
-         * @brief AES 256 cbc decryption implementation.
-         * We use OpenSSL library for encryption.
-         *
-         * Error codes:
-         * - 0: success
-         * - 1: check_keys() returned false
-         * - 2: encrypt init failed
-         * - 3: encrypt update failed
-         * - 4: encrypt final failed
-         *
-         * @param cipher_text Input string in Base64, which will be converted to unsigned char* and decrypted.
-         * @param error Integer in where error will be stored.
-         * @return decrypted cipher text.
+         * @brief Decrypts Base64 encoded cipher text.
+         * We use ChaCha20-Poly1305 authenticated encryption algorithm, implemented in library libsodium.
+         * @param cipher_text Base64 encoded string, which will be encrypted.
+         * @param success True if message was decoded from cipher text, false otherwise.
+         * @return Decrypted text if decrypting was successful. If not, empty string ("").
          */
-        std::string aes_decrypt(const std::string& cipher_text, int& error);
+        
+        std::string decrypt(const std::string& cipher_text, bool& success);
 
         /**
-         * @brief Check if key generating was successful.
-         * @return true if keys were generated and false otherwise.
+         * @brief Checks if Crypto initialization was successful.
+         * Initialization consist of:
+         * - libsodium initialization (checks system random)
+         * - generating key from password (sha256 salted hashing)
+         * @returns true if everything was ok, otherwise false.
          */
-        bool check_keys();
-
+        bool check();
 
         /**
          * @brief Function for encoding to Base64.

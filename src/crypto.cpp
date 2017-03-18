@@ -21,153 +21,102 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <cassert>
 #include <iostream>
 
-// Lot of help from: https://securityblog.gr/2803/openssl-aes-256-cbc-encryption-in-c/
 
 electronpass::Crypto::Crypto(std::string password) {
-    int length = password.length();
-    unsigned char *password_chars = new unsigned char[length];
+    bool part_success = false;
+    if (sodium_init() != -1) part_success = true;
 
-    strcpy(reinterpret_cast<char*>(password_chars), password.c_str());
+    unsigned int password_len = password.length();
+    char *password_char = new char[password_len];
 
-    bool success = generate_keys(password_chars, length);
-    if (success) keys_generated = true;
-    delete[] password_chars;
+    strcpy(password_char, password.c_str());
+    part_success &= generate_key(password_char, password_len);
+    sodium_success = part_success;
+
+    delete[] password_char;
 }
 
-bool electronpass::Crypto::check_keys() {
-    return keys_generated;
+
+bool electronpass::Crypto::generate_key(const char* password, unsigned int password_len) {
+    if (crypto_pwhash_scryptsalsa208sha256(key, sizeof key, password, password_len, CRYPTO_SALT,
+            crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE,
+            crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE) != 0) {
+        return false;
+    }
+    return true;
 }
 
-bool electronpass::Crypto::generate_keys(const unsigned char *password, int pass_len) {
+std::string electronpass::Crypto::encrypt(const std::string& plain_text, bool& success) {
+    if (!check()) {
+        success = false;
+        return "";
+    }
+    const unsigned int message_len = plain_text.length();
+    unsigned char *message = new unsigned char[message_len];
 
-    bool success = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), AES_SALT, password, pass_len,
-                                    AES_ROUNDS, aes_key, aes_iv);
-    return success;
+    // the idea is that we could save encoding / length / metadata ... in additional_data.
+    const unsigned int additional_data_len = 0;
+    const unsigned char *additional_data = {};
+
+    strcpy(reinterpret_cast<char*>(message), plain_text.c_str());
+
+    unsigned char *cipher_text = new unsigned char[message_len + crypto_aead_chacha20poly1305_ABYTES];
+    unsigned long long cipher_text_len;
+
+    success = (crypto_aead_chacha20poly1305_encrypt(cipher_text, &cipher_text_len, message, message_len,
+        additional_data, additional_data_len, NULL, CRYPTO_NONCE, key) == 0);
+
+    delete[] message;
+
+    if (!success) {
+        delete[] cipher_text;
+        return "";
+    }
+
+    std::string cipher(cipher_text_len, '/');  // '/' is just a random char, which will be overwritten
+    for (unsigned long long i; i < cipher_text_len; ++i) cipher[i] = cipher_text[i];
+    delete[] cipher_text;
+
+    cipher = base64_encode(cipher);
+
+    return cipher;
 }
 
-std::string electronpass::Crypto::aes_encrypt(const std::string& plain_text, int& error) {
-    // convert strings to char arrays
-    const int plain_len = plain_text.length();
-    unsigned char *plain_chars = new unsigned char[plain_len];
+std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text, bool& success) {
+    std::string cipher_text = base64_decode(base64_cipher_text);
 
-    strcpy(reinterpret_cast<char*>(plain_chars), plain_text.c_str());
+    const unsigned int cipher_text_len = cipher_text.length();
+    unsigned char *cipher = new unsigned char[cipher_text_len];
 
-    if (!check_keys()) {
-        error = 1;
+    // ADDITIONAL_DATA
+    unsigned int additional_data_len = 0;
+    unsigned char *additional_data = {};  // need to allocate memory if we will use this
+
+    strcpy(reinterpret_cast<char*>(cipher), cipher_text.c_str());
+    cipher_text.clear();
+
+    unsigned char *plain_text = new unsigned char[cipher_text_len];
+    unsigned long long plain_text_len;
+
+    int neki = crypto_aead_chacha20poly1305_decrypt(plain_text, &plain_text_len, NULL,
+                                                    cipher, cipher_text_len, additional_data,
+                                                    additional_data_len, CRYPTO_NONCE, key);
+    std::cout << neki << std::endl;
+    success = neki == 0;
+    delete[] cipher;
+
+    if (!success) {
+        delete[] plain_text;
         return "";
     }
 
-    EVP_CIPHER_CTX *ctx;
-    ctx = EVP_CIPHER_CTX_new();
+    std::string plain(plain_text_len, '/');
+    for (unsigned long long i; i < plain_text_len; ++i) plain[i] = plain_text[i];
+    delete[] plain_text;
 
-    bool success = EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, aes_key, aes_iv);
-    if (success != 1) {  // cleanup
-        if (ctx) EVP_CIPHER_CTX_free(ctx);
-        error = 2;
-        return "";
-    }
-
-    int len, cipher_len;
-    unsigned char *cipher_tmp = new unsigned char[plain_len + AES_BLOCK_SIZE];
-
-    success = EVP_EncryptUpdate(ctx, cipher_tmp, &len, plain_chars, plain_len);
-    delete[] plain_chars;
-    if (success != 1) {  // cleanup
-        if (ctx) EVP_CIPHER_CTX_free(ctx);
-        delete[] cipher_tmp;
-        error = 3;
-        return "";
-    }
-
-    cipher_len = len;
-
-    success = EVP_EncryptFinal_ex(ctx, cipher_tmp + cipher_len, &len);
-    if (success != 1) {  // cleanup
-        if (ctx) EVP_CIPHER_CTX_free(ctx);
-        delete[] cipher_tmp;
-        error = 4;
-        return "";
-    }
-
-    cipher_len += len;
-    if (ctx) EVP_CIPHER_CTX_free(ctx);
-
-    cipher_tmp[cipher_len] = '\0';
-
-    std::string cipher_text(cipher_len, ' ');
-    // first set string len, because if we created string directly from cipher_tmp,
-    // \0 could terminate string and we would loose any further data.
-    for (int i = 0; i < cipher_len; ++i) {
-        cipher_text.at(i) = static_cast<char>(cipher_tmp[i]);
-    }
-
-    assert(static_cast<unsigned int>(cipher_len) == cipher_text.length());
-
-    cipher_text = base64_encode(cipher_text);
-
-    delete[] cipher_tmp;
-
-    error = 0;
-    return cipher_text;
+    return plain;
 }
 
-std::string electronpass::Crypto::aes_decrypt(const std::string& cipher_text, int& error) {
-    std::string decoded_cipher_text = base64_decode(cipher_text);
-
-    const int cipher_len = decoded_cipher_text.length();
-    unsigned char *cipher_chars = new unsigned char[cipher_len];
-
-    // Copy 1 char at once. Can't use strcopy here, because there could be \0 char,
-    // which will terminate the string.
-    for (int i = 0; i < cipher_len; ++i) {
-        cipher_chars[i] = static_cast<unsigned char>(decoded_cipher_text.at(i));
-    }
-
-    if (!check_keys()) {
-        error = 1;
-        return "";
-    }
-
-    EVP_CIPHER_CTX *ctx;
-    ctx = EVP_CIPHER_CTX_new();
-
-    bool success = EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, aes_key, aes_iv);
-    if (success != 1) {  // cleanup
-        if (ctx) EVP_CIPHER_CTX_free(ctx);
-        error = 2;
-        return "";
-    }
-    int len, plain_len;
-    unsigned char *plain_tmp = new unsigned char[cipher_len + 1];
-
-    success = EVP_DecryptUpdate(ctx, plain_tmp, &len, cipher_chars, cipher_len);
-    delete[] cipher_chars;
-    if (success != 1) {  // cleanup
-        if (ctx) EVP_CIPHER_CTX_free(ctx);
-        delete[] plain_tmp;
-        error = 3;
-        return "";
-    }
-
-    plain_len = len;
-
-    success = EVP_DecryptFinal(ctx, plain_tmp + plain_len, &len);
-    if (success != 1) {
-        if (ctx) EVP_CIPHER_CTX_free(ctx);
-        delete[] plain_tmp;
-        error = 4;
-        return "";
-    }
-
-    plain_len += len;
-    if (ctx) EVP_CIPHER_CTX_free(ctx);
-
-    plain_tmp[plain_len] = '\0';
-
-    std::string plain_text(reinterpret_cast<char*>(plain_tmp));
-    assert(static_cast<unsigned int>(plain_len) == plain_text.length());
-
-    delete[] plain_tmp;
-    error = 0;
-    return plain_text;
+bool electronpass::Crypto::check() {
+    return sodium_success;
 }
