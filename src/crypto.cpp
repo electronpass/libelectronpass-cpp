@@ -98,11 +98,9 @@ std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text,
     unsigned char *plain_text = new unsigned char[cipher_text_len];
     unsigned long long plain_text_len;
 
-    int neki = crypto_aead_chacha20poly1305_decrypt(plain_text, &plain_text_len, NULL,
+    success = (crypto_aead_chacha20poly1305_decrypt(plain_text, &plain_text_len, NULL,
                                                     cipher, cipher_text_len, additional_data,
-                                                    additional_data_len, CRYPTO_NONCE, key);
-    std::cout << neki << std::endl;
-    success = neki == 0;
+                                                    additional_data_len, CRYPTO_NONCE, key) == 0);
     delete[] cipher;
 
     if (!success) {
