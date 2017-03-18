@@ -31,6 +31,7 @@ electronpass::Crypto::Crypto(std::string password) {
 
     bool success = generate_keys(password_chars, length);
     if (success) keys_generated = true;
+    delete[] password_chars;
 }
 
 bool electronpass::Crypto::check_keys() {
@@ -38,7 +39,7 @@ bool electronpass::Crypto::check_keys() {
 }
 
 bool electronpass::Crypto::generate_keys(const unsigned char *password, int pass_len) {
-    
+
     bool success = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), AES_SALT, password, pass_len,
                                     AES_ROUNDS, aes_key, aes_iv);
     return success;
@@ -66,16 +67,14 @@ std::string electronpass::Crypto::aes_encrypt(const std::string& plain_text, int
         return "";
     }
 
-    unsigned char *cipher_tmp;
     int len, cipher_len;
-    cipher_tmp = (unsigned char *) malloc((plain_len + AES_BLOCK_SIZE) * sizeof(unsigned char));
-    if (cipher_tmp == NULL) return 0;
+    unsigned char *cipher_tmp = new unsigned char[plain_len + AES_BLOCK_SIZE];
 
     success = EVP_EncryptUpdate(ctx, cipher_tmp, &len, plain_chars, plain_len);
-    free(plain_chars);
+    delete[] plain_chars;
     if (success != 1) {  // cleanup
         if (ctx) EVP_CIPHER_CTX_free(ctx);
-        if (cipher_tmp) free(cipher_tmp);
+        delete[] cipher_tmp;
         error = 3;
         return "";
     }
@@ -85,7 +84,7 @@ std::string electronpass::Crypto::aes_encrypt(const std::string& plain_text, int
     success = EVP_EncryptFinal_ex(ctx, cipher_tmp + cipher_len, &len);
     if (success != 1) {  // cleanup
         if (ctx) EVP_CIPHER_CTX_free(ctx);
-        if (cipher_tmp) free(cipher_tmp);
+        delete[] cipher_tmp;
         error = 4;
         return "";
     }
@@ -106,7 +105,7 @@ std::string electronpass::Crypto::aes_encrypt(const std::string& plain_text, int
 
     cipher_text = base64_encode(cipher_text);
 
-    if (cipher_tmp) free(cipher_tmp);
+    delete[] cipher_tmp;
 
     error = 0;
     return cipher_text;
@@ -138,16 +137,14 @@ std::string electronpass::Crypto::aes_decrypt(const std::string& cipher_text, in
         error = 2;
         return "";
     }
-    unsigned char *plain_tmp;
     int len, plain_len;
-    plain_tmp = (unsigned char *) malloc((cipher_len + 1) * sizeof(unsigned char));
-    if (plain_tmp == NULL) return 0;
+    unsigned char *plain_tmp = new unsigned char[cipher_len + 1];
 
     success = EVP_DecryptUpdate(ctx, plain_tmp, &len, cipher_chars, cipher_len);
-    free(cipher_chars);
+    delete[] cipher_chars;
     if (success != 1) {  // cleanup
         if (ctx) EVP_CIPHER_CTX_free(ctx);
-        if (plain_tmp) free(plain_tmp);
+        delete[] plain_tmp;
         error = 3;
         return "";
     }
@@ -157,7 +154,7 @@ std::string electronpass::Crypto::aes_decrypt(const std::string& cipher_text, in
     success = EVP_DecryptFinal(ctx, plain_tmp + plain_len, &len);
     if (success != 1) {
         if (ctx) EVP_CIPHER_CTX_free(ctx);
-        if (plain_tmp) free(plain_tmp);
+        delete[] plain_tmp;
         error = 4;
         return "";
     }
@@ -170,7 +167,7 @@ std::string electronpass::Crypto::aes_decrypt(const std::string& cipher_text, in
     std::string plain_text(reinterpret_cast<char*>(plain_tmp));
     assert(static_cast<unsigned int>(plain_len) == plain_text.length());
 
-    if (plain_tmp) free(plain_tmp);
+    delete[] plain_tmp;
     error = 0;
     return plain_text;
 }
