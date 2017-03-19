@@ -145,7 +145,7 @@ std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text,
     // Need to copy in for loop because otherwise '\0' would terminate copying.
     std::string plain(plain_text_len, '/');
 
-    for (unsigned long long i; i < plain_text_len; ++i) plain[i] = plain_text[i];
+    for (unsigned long long i = 0; i < plain_text_len; ++i) plain[i] = plain_text[i];
     delete[] plain_text;
 
     return plain;

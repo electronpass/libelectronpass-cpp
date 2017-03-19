@@ -1,29 +1,84 @@
 #include "crypto.hpp"
-// #include "gtest/gtest.h"
+#include "gtest/gtest.h"
 #include <string>
-#include <iostream>
-#include <cassert>
+#include <map>
+#include <vector>
 
-int main() {
+TEST(CryptoTest, EncryptionDecryptionTest) {
     electronpass::Crypto c("password");
-    assert(c.check());
+    ASSERT_TRUE(c.check());
 
-    std::string text, enc, dec;
-    bool ok1, ok2;
-    text = "Hello, World!";
+    bool ok1 = false, ok2 = false;
+    const std::string text = "Random useless message";
+    EXPECT_EQ(c.decrypt(c.encrypt(text, ok1), ok2), text);
+    EXPECT_TRUE(ok1 && ok2);
+}
 
-    enc = c.encrypt(text, ok1);
+TEST(CryptoTest, EncryptionUniqueTest) {
+    electronpass::Crypto c("password");
+    ASSERT_TRUE(c.check());
 
-    electronpass::Crypto anoher_c_which_will_not_be_used("another password");
-    assert(anoher_c_which_will_not_be_used.check());
+    const std::string text = "Hello, World!";
 
-    dec = c.decrypt(enc, ok2);
+    // Checks if every encryption with same password is unique.
+    std::map<std::string, bool> encrypted;
+    for (int i = 0; i < 1000; ++i) {
+        bool success = false;
+        std::string enc = c.encrypt(text, success);
 
+        EXPECT_FALSE(encrypted[enc]);
+        EXPECT_TRUE(success);
+        encrypted[enc] = true;
+    }
+}
 
-    std::cout << ok1 << " " << ok2 << std::endl;
-    std::cout << enc << std::endl;
-    std::cout << dec << std::endl;
-    assert(dec == text);
-    return 0;
+TEST(CryptoTest, DecryptionUniqueTest) {
+    electronpass::Crypto c("password");
+    ASSERT_TRUE(c.check());
 
+    const std::string text = "Hello, World!";
+
+    // String text decrypted multiple times, with same password.
+    const std::vector<std::string> v = {
+            "JXR9gNdT2jPAChnKkVAJalZu0bx3Fec1lSsloA9XzTq6S3D9yw==",
+            "LnIyhCzBCSUYg5hYGDIAlYYBle1Rw6IPP5Y3PytpJUoaGziuww==",
+            "zufJB/J1uzF/efUBi3MkhGFT2j5189t7gdL76oq0MZsTFaddQw==",
+            "hOfYxsrp98DR6bQeAC8x7/k1zgY/OFULFADKAo5on/lMibAW/Q==",
+            "FO2Lf6rTV00lYw8sTyCNaHwxTYLG+rpHr+2osIDmd2xPxDEBEQ==",
+            "bA0T/JC2xJtX/L2Ljxos+oPdJg0PHz6PtE/FMv5LqAIfv9Glew==",
+            "q7xAe4fjUTjwwQeATJbFotiiy1x00aZ6iipaHWStS3is28Xqig==",
+            "fSo5TU6mFPuGC8kIBSxQNSZ7PaB6aT6eb76fVbEPQlsRqtM6eg==",
+            "E9hFcJb3UdsiR2IbBjIrDaxUm5EgTnl/M5zcFwdWTvGXIW33kg==",
+            "KL3XOYwF+Jv2ljsYd/k4/XXZTtlxbrfaokOUorxCkoB4qrGaxA==",
+            "KcfPgRdMPDIu2TQeT/vF1KfY9KCZzZC/ovEvRxG6dd+sCMpkcQ==",
+            "MZBMkuGl82MmFTl9ZOQ+Dx3o0NRpyUKqjP8o4PxyF8GjfDVezA==",
+            "hGniqmFNgDk/L9+RnGfRoTxLvC9oXknjBjl50ni++UDhLn+8AQ==",
+            "U2Mp4kkT1kdL3II9MYlIZH+g2pzV6QFuA0ZXIriYiY4S2kyprg==",
+            "ueRAlrk8i/jJqlF++3UqfSr/so7uU1uxvbp0KNYNEmxVWLmPKw==",
+            "0hBE/pZZ/vhelp7lTe/ZY0DU7oUf8umfGJNSkuxj8Pj8ywp6PQ==",
+            "+6/4A+ifs6dlKk6Bon6TyGDw1q5REV2i4R6SP4kMbKLlxMtpCw==",
+            "ie/G2pxCRYi7Kzwsiua+/6vmf43ZdL1YXtiaz1xSNxpDMWfqZQ==",
+            "8/aPhNZ48kRfdCeAIQleV7sel6GVwgea03tqZQIgtiKsnsz5bA==",
+            "NRDApCbtCFCWnahAQ4Qdvn2SwTeP0saxTqetG54vwWpnPd0/Sw==",
+            "3GLNknfTjDK0DwJbXnNAjea0rWI5HduIvJcdp6+4si1Gfwaxew==",
+            "KIoOWyc/RuqvVgpZDw5VxQvuHapMAN2u8hbfJsyhwYqy6v0urQ==",
+            "lnzH8qVW7rklfMMlJf6QqISxD9QW0YDABqPJPE/0aLzvNK8xBQ==",
+            "wvx2Xa6K4GPW2YVZnDTya8Pgec/AHS03SJdY//ms/IPu9xr7Iw==",
+            "jj3+kOBk970U3RHOfTLSLRaL8AUHKfwgvxUk0OaGedKw+4QuaQ==",
+            "dHSUT/oes4UcOyq8AUS4kdbignb2KPu460jqonQ+9YXc2rMo8Q==",
+            "zcrGKe+ncAOe1iO/FXe3Dv9/ZIGk8VhuDzCbSzNJgt5g0D5FAA==",
+            "Vu4c6HhTwXjw3qZCO3xEPum0hZRCkPI/H1SHQL/H/WI9GMH6Kg==",
+            "r+xsNXdzT2IdHOegdMw4WTjj1YHf2R0qi52JwIKhzgY3ZRX3kQ==",
+            "M6mNnDPdNIK1Bjtl87HHPXooQlWpIAcnhui4CVGdLizKte4veQ==",
+            "KrOmhJGuId1SVvK+msGqsKnj52SuMR06OJnyKzuP7cPUnBZSHw==",
+        };
+
+    // Checks if every decryption with same password returns correct value.
+    for (unsigned int i = 0; i < v.size(); ++i) {
+        bool success = false;
+        std::string dec = c.decrypt(v[i], success);
+
+        EXPECT_EQ(dec, text);
+        EXPECT_TRUE(success);
+    }
 }
