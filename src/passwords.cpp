@@ -36,7 +36,7 @@ int true_random_int(int min, int max) {
 // Rewrites string without n-th char and returns it.
 std::string rm_char(std::string a, int n) {
     std::string result = "";
-    for (int i = 0; i < (int) a.size(); i++) {
+    for (int i = 0; i < static_cast<int>(a.size()); i++) {
         if (i != n) result += a[i];
     }
     return result;
@@ -57,22 +57,22 @@ int number_of_occurrences(std::string a, std::string b) {
 std::string electronpass::passwords::generate_random_pass(int len, int digits, int symbols, int uppercase) {
     // take random characters from initial ones
     std::string dataset = "";
-    for (int i = 0; i < digits && (int) dataset.size() < len; ++i) {
+    for (int i = 0; i < digits && static_cast<int>(dataset.size()) < len; ++i) {
         dataset += digits_list[true_random_int(0, digits_list.size() - 1)];
     }
-    for (int i = 0; i < symbols && (int) dataset.size() < len; ++i) {
+    for (int i = 0; i < symbols && static_cast<int>(dataset.size()) < len; ++i) {
         dataset += special_chars_list[true_random_int(0, special_chars_list.size() - 1)];
     }
-    for (int i = 0; i < uppercase && (int) dataset.size() < len; ++i) {
+    for (int i = 0; i < uppercase && static_cast<int>(dataset.size()) < len; ++i) {
         dataset += uppercase_letters_list[true_random_int(0, uppercase_letters_list.size() - 1)];
     }
-    for (int i = 0; i < len - (int) dataset.size(); ++i) {
+    for (int i = 0; i < len - static_cast<int>(dataset.size()); ++i) {
         dataset += letters_list[true_random_int(0, letters_list.size() - 1)];
     }
 
     // shuffle dataset
     std::string result = "";
-    while ((int) result.size() < len) {
+    while (static_cast<int>(result.size()) < len) {
         if (dataset.size() > 1) {
             // select random char and move it into result
             int i = true_random_int(0, dataset.size() - 1);
