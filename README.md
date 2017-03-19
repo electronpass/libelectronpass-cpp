@@ -1,5 +1,6 @@
 # libelectronpass
 [![Build Status](https://travis-ci.org/electronpass/libelectronpass.svg?branch=master)](https://travis-ci.org/electronpass/libelectronpass)
+
 Core C++ library for ElectronPass.
 
 ## Dependencies
