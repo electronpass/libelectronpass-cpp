@@ -11,6 +11,7 @@ Core C++ library for ElectronPass.
     mkdir build; cd build
     cmake ..
     make libelectronpass -j8
+    make check
 
 ## Documentation
 Documentation is generated using doxygen:
