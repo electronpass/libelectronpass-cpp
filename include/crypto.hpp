@@ -39,10 +39,6 @@ namespace electronpass {
         0xfb, 0x90, 0xca, 0x02, 0x4c, 0x31, 0xa6, 0x11
     };
 
-    // Nonce used for ChaCha20-Poly1305 encryption
-    static const unsigned char CRYPTO_NONCE[crypto_aead_chacha20poly1305_NPUBBYTES] = {  // 8 bytes
-        0x12, 0xa0, 0xf7, 0x3a, 0x3e, 0x4b, 0x3a, 0x54};
-
     /// Class for cryptographics functions and helper functions.
     class Crypto {
       private:
@@ -80,7 +76,7 @@ namespace electronpass {
          * @param success True if message was decoded from cipher text, false otherwise.
          * @return Decrypted text if decrypting was successful. If not, empty string ("").
          */
-        
+
         std::string decrypt(const std::string& cipher_text, bool& success);
 
         /**
