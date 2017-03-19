@@ -24,6 +24,10 @@ Documentation is generated using doxygen:
 You can also use make to generate documentation with:
 
     make docs
+    
+and run tests with:
+
+    make check
 
 ## License
 Code in this project is licensed under [GNU LGPLv3 license](https://github.com/electronpass/libelectronpass/blob/master/LICENSE.LESSER). Some third party files are subjective to their respective license.
