@@ -1,0 +1,12 @@
+language: cpp
+sudo: required
+compiler:
+  - clang
+  - gcc
+distro: yakkety
+os:
+  - linux
+  - osx
+brefore_install:
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install -y clang-3.8 libsodium-dev; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install sodium; fi
