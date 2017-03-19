@@ -11,4 +11,4 @@ before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then bash .travis/install-sodium-trusty.sh; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install sodium; fi
 script:
-  - cmake . && make && make test
+  - cmake . && make && make check
