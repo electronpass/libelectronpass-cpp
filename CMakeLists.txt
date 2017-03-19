@@ -13,6 +13,7 @@ include_directories(include ${sodium_INCLUDE_DIR})
 
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(examples)
 
 add_custom_target(docs COMMAND doxygen docs/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 add_custom_target(check COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests)

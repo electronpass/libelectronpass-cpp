@@ -66,7 +66,7 @@ std::string electronpass::passwords::generate_random_pass(int len, int digits, i
     for (int i = 0; i < uppercase && static_cast<int>(dataset.size()) < len; ++i) {
         dataset += uppercase_letters_list[true_random_int(0, uppercase_letters_list.size() - 1)];
     }
-    for (int i = 0; i < len - static_cast<int>(dataset.size()); ++i) {
+    while (len > static_cast<int>(dataset.size())){
         dataset += letters_list[true_random_int(0, letters_list.size() - 1)];
     }
 
@@ -101,7 +101,7 @@ electronpass::passwords::strength_category electronpass::passwords::double_to_pa
     if (d < 0.002) return strength_category::TERRIBLE;
     else if (d < 0.005) return strength_category::BAD;
     else if (d < 0.05) return strength_category::MODERATE;
-    else if (d < 0.09) return strength_category::GOOD;
+    else if (d < 0.7) return strength_category::GOOD;
     else return strength_category::VERY_STRONG;
 }
 

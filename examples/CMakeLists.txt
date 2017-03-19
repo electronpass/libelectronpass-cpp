@@ -1,0 +1,2 @@
+add_executable(passwords_example passwords_example.cpp)
+target_link_libraries(passwords_example electronpass)
