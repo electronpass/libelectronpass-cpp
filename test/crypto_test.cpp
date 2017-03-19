@@ -4,14 +4,38 @@
 #include <map>
 #include <vector>
 
-TEST(CryptoTest, EncryptionDecryptionTest) {
-    electronpass::Crypto c("password");
-    ASSERT_TRUE(c.check());
+std::string random_string(int len) {
+    std::string out(len, ' ');
+    // rand() is not actual random, but it is probalby ok for testing.
+    for (int i = 0; i < len; ++i) out[i] = static_cast<char>(rand() % 256);
+    return out;
+}
 
-    bool ok1 = false, ok2 = false;
-    const std::string text = "Random useless message";
-    EXPECT_EQ(c.decrypt(c.encrypt(text, ok1), ok2), text);
-    EXPECT_TRUE(ok1 && ok2);
+TEST(CryptoTest, EncryptionDecryptionTest) {
+    electronpass::Crypto c1("password");
+    electronpass::Crypto c2("Password");  // small change in password
+    ASSERT_TRUE(c1.check() && c2.check());
+
+    for (int i = 0; i < 1000; ++i) {
+        bool ok1 = false, ok2 = false;
+        const std::string text = random_string(100);
+
+        std::string enc1, enc2;
+        enc1 = c1.encrypt(text, ok1);
+        enc2 = c2.encrypt(text, ok2);
+        EXPECT_TRUE(ok1 && ok2);
+
+        ok1 = false, ok2 = false;
+        // normal decryption
+        EXPECT_EQ(c1.decrypt(enc1, ok1), text);
+        EXPECT_EQ(c2.decrypt(enc2, ok2), text);
+        EXPECT_TRUE(ok1 && ok2);
+
+        // decryption with wrong password
+        EXPECT_EQ(c1.decrypt(enc2, ok1), "");
+        EXPECT_EQ(c2.decrypt(enc1, ok2), "");
+        EXPECT_FALSE(ok1 || ok2);
+    }
 }
 
 TEST(CryptoTest, EncryptionUniqueTest) {
