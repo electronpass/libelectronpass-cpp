@@ -216,7 +216,6 @@ namespace electronpass {
          * @return Deleted item.
          */
         Item delete_item(unsigned int index, int& error);
-
       private:
         std::vector<Item> items;
     };
