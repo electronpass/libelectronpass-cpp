@@ -58,7 +58,8 @@ std::string electronpass::Crypto::encrypt(const std::string& plain_text, bool& s
     const unsigned int message_len = plain_text.length();
     unsigned char *message = new unsigned char[message_len];
 
-    strcpy(reinterpret_cast<char*>(message), plain_text.c_str());
+    // Copy string with for loop, just in case there is a '\0' char in plain_text.
+    for (unsigned int i = 0; i < message_len; ++i) message[i] = plain_text[i];
 
     // Allocate memory for encrypted message.
     // Additional ChaCha20 - Poly1305 bytes are needed for authentication.
