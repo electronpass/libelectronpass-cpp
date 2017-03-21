@@ -24,6 +24,11 @@ TEST(SerializationTest, SerializationTest) {
     EXPECT_EQ(json, json_string);
 }
 
+TEST(SerializationTest, EmptySerializationTest) {
+    std::string json = electronpass::serialization::serialize(electronpass::Wallet());
+    EXPECT_EQ(json, "{\"items\":null}");
+}
+
 TEST(SerializationTest, DeserializationTest) {
     std::string json_string = "{\"items\":[{\"fields\":[{\"name\":\"Username\",\"sensitive\":false,\"type\":\"username\",\"value\":\"open_user\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"secret_pa55\"}],\"name\":\"Google\"},{\"fields\":[{\"name\":\"E-mail\",\"sensitive\":false,\"type\":\"email\",\"value\":\"electron.pass@mail.com\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"reallynotsecurepass123\"}],\"name\":\"Google\"}]}";
     electronpass::Wallet wallet = electronpass::serialization::deserialize(json_string);
@@ -39,4 +44,10 @@ TEST(SerializationTest, DeserializationTest) {
             EXPECT_EQ(fields[j].sensitive, test_wallet().get_items()[i].get_fields()[j].sensitive);
         }
     }
+}
+
+TEST(SerializationTest, EmptyDeserializationTest) {
+    std::string json = "{\"items\":null}";
+    electronpass::Wallet wallet = electronpass::serialization::deserialize(json);
+    EXPECT_EQ(wallet.get_items().size(), static_cast<unsigned int>(0));
 }

@@ -85,6 +85,7 @@ Wallet serialization::deserialize(const std::string& json) {
 
 std::string serialization::serialize(const Wallet &wallet) {
     Json::Value root;
+    root["items"] = Json::Value();
 
     std::vector<Wallet::Item> items = wallet.get_items();
     for (unsigned int i = 0; i < items.size(); ++i) {
