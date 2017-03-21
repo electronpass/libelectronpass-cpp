@@ -76,7 +76,6 @@ namespace electronpass {
          * @param success True if message was decoded from cipher text, false otherwise.
          * @return Decrypted text if decrypting was successful. If not, empty string ("").
          */
-
         std::string decrypt(const std::string& cipher_text, bool& success);
 
         /**

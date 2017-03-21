@@ -38,6 +38,19 @@ TEST(CryptoTest, EncryptionDecryptionTest) {
     }
 }
 
+TEST(CryptoTest, EncryptionDecryptionEmptyTest) {
+    electronpass::Crypto c("password");
+    ASSERT_TRUE(c.check());
+
+    bool ok = false;
+    std::string enc = c.encrypt("", ok);
+    ASSERT_TRUE(ok);
+
+    ok = false;
+    EXPECT_EQ(c.decrypt(enc, ok), "");
+    ASSERT_TRUE(ok);
+}
+
 TEST(CryptoTest, EncryptionUniqueTest) {
     electronpass::Crypto c("password");
     ASSERT_TRUE(c.check());

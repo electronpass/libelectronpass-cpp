@@ -16,11 +16,6 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "crypto.hpp"
-#include <string.h>
-#include <string>
-#include <cassert>
-#include <iostream>
-
 
 electronpass::Crypto::Crypto(std::string password) {
     bool part_success = false;
@@ -30,7 +25,8 @@ electronpass::Crypto::Crypto(std::string password) {
     unsigned int password_len = password.length();
     char *password_char = new char[password_len];
 
-    strcpy(password_char, password.c_str());
+    for (unsigned int i = 0; i < password_len; ++i) password_char[i] = password[i];
+
     part_success &= generate_key(password_char, password_len);
     sodium_success = part_success;
 
