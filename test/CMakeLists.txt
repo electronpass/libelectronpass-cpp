@@ -1,3 +1,6 @@
+add_subdirectory(googletest)
+include_directories(googletest/googletest/include)
+
 set(TEST_FILES
     base64_test.cpp
     crypto_test.cpp
