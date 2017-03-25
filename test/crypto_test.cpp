@@ -1,8 +1,10 @@
-#include "crypto.hpp"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <string>
 #include <map>
 #include <vector>
+
+
+#include "crypto.hpp"
 
 std::string random_string(int len) {
     std::string out(len, ' ');

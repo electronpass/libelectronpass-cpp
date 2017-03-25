@@ -1,5 +1,7 @@
+#include <gtest/gtest.h>
+
 #include "crypto.hpp"
-#include "gtest/gtest.h"
+
 
 TEST(Base64Encode, Basic) {
     EXPECT_EQ(electronpass::Crypto::base64_encode("Test"), "VGVzdA==");

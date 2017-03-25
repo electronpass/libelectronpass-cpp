@@ -1,4 +1,5 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
+
 #include "wallet.hpp"
 #include "serialization.hpp"
 

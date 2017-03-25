@@ -7,6 +7,7 @@ Core C++ library for ElectronPass.
 
 - [libsodium](https://libsodium.org) - A modern and easy-to-use crypto library
 - [jsoncpp v1.8.0](https://github.com/open-source-parsers/jsoncpp) - Already included in source code
+- [gtest](https://github.com/google/googletest) - Required for building tests. On Arch linux you can use ```gtest``` package, on debian and ubuntu based distros you can use ```libgtest-dev``` package for installing it.
 
 ## Building
 
@@ -14,6 +15,10 @@ Core C++ library for ElectronPass.
     cmake ..
     make libelectronpass -j8
     make check
+
+## Installing
+
+    sudo make install
 
 ## Documentation
 Documentation is generated using doxygen:

@@ -1,6 +1,8 @@
-#include "passwords.hpp"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <tuple>
+
+#include "passwords.hpp"
+
 
 // passwords to test evaluation against
 const std::vector<std::tuple<std::string, electronpass::passwords::strength_category>> sample_passwords = {
