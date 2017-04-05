@@ -20,6 +20,8 @@ Core C++ library for ElectronPass.
 
     sudo make install
 
+Note: if the library doesn't link on linux you should run ```sudo ldconfig /usr/local/lib```.
+
 ## Documentation
 Documentation is generated using doxygen:
 
