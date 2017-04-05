@@ -10,5 +10,3 @@ set(TEST_FILES
 
 add_executable(tests ${TEST_FILES})
 target_link_libraries(tests electronpass gtest gtest_main)
-
-add_custom_target(check COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests DEPENDS gtest)
