@@ -17,3 +17,5 @@ add_subdirectory(examples)
 
 add_custom_target(docs COMMAND doxygen docs/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 add_custom_target(check COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests)
+
+install(DIRECTORY jsoncpp/ DESTINATION include/electronpass)#/usr/include/electronpass/)
