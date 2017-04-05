@@ -12,10 +12,9 @@ find_package(sodium REQUIRED)
 include_directories(include jsoncpp ${sodium_INCLUDE_DIR})
 
 add_subdirectory(src)
-add_subdirectory(test)
-add_subdirectory(examples)
+add_subdirectory(test EXCLUDE_FROM_ALL)
+add_subdirectory(examples EXCLUDE_FROM_ALL)
 
 add_custom_target(docs COMMAND doxygen docs/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-add_custom_target(check COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests)
 
 install(DIRECTORY jsoncpp/ DESTINATION include/electronpass)#/usr/include/electronpass/)

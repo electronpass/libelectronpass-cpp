@@ -13,7 +13,10 @@ Core C++ library for ElectronPass.
 
     mkdir build; cd build
     cmake ..
-    make libelectronpass -j8
+    make -j8
+
+To run tests:
+
     make check
 
 ## Installing
@@ -31,10 +34,11 @@ Documentation is generated using doxygen:
 You can also use make to generate documentation with:
 
     make docs
-    
-and run tests with:
 
-    make check
+## Examples
+Simple usage examples are located in ```examples/``` folder. To build examples run from ```build/``` folder:
+
+    make examples
 
 ## License
 Code in this project is licensed under [GNU LGPLv3 license](https://github.com/electronpass/libelectronpass/blob/master/LICENSE.LESSER). Some third party files are subjective to their respective license.
