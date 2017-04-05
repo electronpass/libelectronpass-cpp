@@ -46,9 +46,7 @@ endmacro()
 # Google Mock.  You can tweak these definitions to suit your need.  A
 # variable's value is empty before it's explicitly assigned to.
 macro(config_compiler_and_linker)
-  # Note: pthreads on MinGW is not supported, even if available
-  # instead, we use windows threading primitives
-  if (NOT gtest_disable_pthreads AND NOT MINGW)
+  if (NOT gtest_disable_pthreads)
     # Defines CMAKE_USE_PTHREADS_INIT and CMAKE_THREAD_LIBS_INIT.
     find_package(Threads)
   endif()
