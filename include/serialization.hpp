@@ -57,4 +57,4 @@ namespace electronpass {
 
 
 
-#endif //ELECTRONPASS_WALLET_HPP
+#endif //ELECTRONPASS_SERIALIZATION_HPP
