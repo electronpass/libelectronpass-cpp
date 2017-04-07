@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SRC_PASSGENERATOR_HPP
-#define SRC_PASSGENERATOR_HPP
+#ifndef ELECTRONPASS_PASSGENETATOR_HPP
+#define ELECTRONPASS_PASSGENETATOR_HPP
 
 #include <string>
 #include <vector>

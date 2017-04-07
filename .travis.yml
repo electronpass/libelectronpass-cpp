@@ -19,9 +19,7 @@ addons:
               key_url: 'http://llvm.org/apt/llvm-snapshot.gpg.key'
         packages:
             - clang-3.8
-            - lldb-3.8
             - g++-5
-            - gcc-5
             - libsodium-dev
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ] && [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
