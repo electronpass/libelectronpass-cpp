@@ -136,26 +136,29 @@ double electronpass::passwords::password_strength(std::string password) {
             lowercase++;
         } else if (uppercase_letters_list.find(a) != std::string::npos) {
             uppercase++;
-        } else if (special_chars_list.find(a) != std::string::npos) {
+        } else if (uppercase_letters_list.find(a) != std::string::npos) {
             symbols++;
         }
     }
 
     // sum of all possible chars
-    double all_possible_chars = static_cast<double>(digits_list.size() + letters_list.size() +
+    const double all_possible_chars = static_cast<double>(digits_list.size() + letters_list.size() +
                                                     uppercase_letters_list.size() + special_chars_list.size());
 
     //average shares
-    double avg_digits_share = static_cast<double>(digits_list.size()) / all_possible_chars;
-    double avg_lowercase_share = static_cast<double>(letters_list.size()) / all_possible_chars;
-    double avg_uppercase_share = static_cast<double>(uppercase_letters_list.size()) / all_possible_chars;
-    double avg_symbols_share = static_cast<double>(special_chars_list.size()) / all_possible_chars;
+    const double avg_digits_share = static_cast<double>(digits_list.size()) / all_possible_chars;
+    const double avg_lowercase_share = static_cast<double>(letters_list.size()) / all_possible_chars;
+    const double avg_uppercase_share = static_cast<double>(uppercase_letters_list.size()) / all_possible_chars;
+    const double avg_symbols_share = static_cast<double>(special_chars_list.size()) / all_possible_chars;
 
-    //actual shares
-    double digits_share = static_cast<double>(digits) / static_cast<double>(password.size());
-    double lowercase_share = static_cast<double>(lowercase) / static_cast<double>(password.size());
-    double uppercase_share = static_cast<double>(uppercase) / static_cast<double>(password.size());
-    double symbols_share = static_cast<double>(symbols) / static_cast<double>(password.size());
+    double digits_share = 0, lowercase_share = 0, uppercase_share = 0, symbols_share = 0;
+    if (password.size() > 0) {
+        //actual shares
+        digits_share = static_cast<double>(digits) / static_cast<double>(password.size());
+        lowercase_share = static_cast<double>(lowercase) / static_cast<double>(password.size());
+        uppercase_share = static_cast<double>(uppercase) / static_cast<double>(password.size());
+        symbols_share = static_cast<double>(symbols) / static_cast<double>(password.size());
+    }
 
     //calculate max result and current max
     long double max_result = pow(2, 58);

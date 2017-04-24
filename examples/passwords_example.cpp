@@ -28,8 +28,8 @@ int main() {
     std::string pass;
     std::cout << std::endl;
     while (true) {
-        std::cout << "Pick a password to test: ";
-        std::cin >> pass;
+        std::cout << "Pick a password to test: " << std::endl;
+        std::getline(std::cin, pass);
         std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
                   << std::endl;
     }
