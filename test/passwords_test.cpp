@@ -6,6 +6,8 @@
 
 // passwords to test evaluation against
 const std::vector<std::tuple<std::string, electronpass::passwords::strength_category>> sample_passwords = {
+        std::make_tuple("", electronpass::passwords::strength_category::TERRIBLE),
+        std::make_tuple("a", electronpass::passwords::strength_category::TERRIBLE),
         std::make_tuple("neki", electronpass::passwords::strength_category::TERRIBLE),
         std::make_tuple("lineageosas", electronpass::passwords::strength_category::BAD),
         std::make_tuple("lineageosas101", electronpass::passwords::strength_category::GOOD),
