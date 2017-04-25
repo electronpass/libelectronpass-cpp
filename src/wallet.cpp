@@ -69,3 +69,27 @@ std::vector<Wallet::Field> Wallet::Item::get_fields() const {
 void Wallet::Item::set_fields(const std::vector<Field> &fields_) {
     fields = fields_;
 }
+
+unsigned long Wallet::size() {
+    return items.size();
+}
+
+Wallet::Item& Wallet::operator[](unsigned long index) {
+    return items[index];
+}
+
+const Wallet::Item& Wallet::operator[](unsigned long index) const {
+    return items[index];
+}
+
+unsigned long Wallet::Item::size() {
+    return fields.size();
+}
+
+Wallet::Field& Wallet::Item::operator[](unsigned long index) {
+    return fields[index];
+}
+
+const Wallet::Field& Wallet::Item::operator[](unsigned long index) const {
+    return fields[index];
+}

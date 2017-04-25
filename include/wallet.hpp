@@ -23,8 +23,8 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * @file wallet.hpp
- * @author Vid Drobnič <vid.drobnic@gmail.com>
- * @brief Defined wallet class for storing passwords and intecracting with them.
+ * @author Vid Drobnič <vid.drobnic@protonmail.com>
+ * @brief Defined wallet class for storing passwords and interacting with them.
  */
 
 /**
@@ -131,6 +131,26 @@ namespace electronpass {
              * @param fields Fields that should be set to this item.
              */
             void set_fields(const std::vector<Field>& fields);
+
+            /**
+             * @brief Number of fields in item.
+             * @return Number of fields
+             */
+            unsigned long size();
+
+            /**
+             * @brief Array subscript for field in item.
+             * @param index Index of field
+             * @return Field
+             */
+            Field& operator[](unsigned long index);
+
+            /**
+             * @brief Array subscript for field in item when item is constant.
+             * @param index Index of field
+             * @return Field
+             */
+            const Field& operator[](unsigned long index) const;
         };
 
 
@@ -216,6 +236,27 @@ namespace electronpass {
          * @return Deleted item.
          */
         Item delete_item(unsigned int index, int& error);
+
+        /**
+         * @brief Number of items in the wallet.
+         *
+         * @return Number of items.
+         */
+        unsigned long size();
+
+        /**
+         * @brief Array subscript for items.
+         * @param index Index of item.
+         * @return Item
+         */
+        Item& operator[](unsigned long index);
+
+        /**
+         * @brief Array subscript for items in constant wallets.
+         * @param index Index of item.
+         * @return Item
+         */
+        const Item& operator[](unsigned long index) const;
       private:
         std::vector<Item> items;
     };
