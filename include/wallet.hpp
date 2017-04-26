@@ -18,6 +18,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ELECTRONPASS_WALLET_HPP
 #define ELECTRONPASS_WALLET_HPP
 
+#include <map>
 #include <vector>
 #include <string>
 
@@ -94,9 +95,11 @@ namespace electronpass {
          * allowed using the class methods.
          */
         class Item {
-            std::vector<Field> fields;
             std::string id;
           public:
+            /// Item fields.
+            std::vector<Field> fields;
+
             /// Constructor for creating an empty item. New id will be set to the item.
             Item();
 
@@ -125,29 +128,15 @@ namespace electronpass {
             std::string name;
 
             /**
-             * @brief Method for reading the fields.
-             *
-             * This method returns all fields in this item.
-             *
-             * @return Vector of fields.
-             */
-            const std::vector<Field>& get_fields() const;
-
-            /**
-             * @brief Method for setting the fields.
-             *
-             * This methods overrides all existing fields with the fields that you provide as the parameter. It can be
-             * used if you want to populate the fields of the item after it has been initialized.
-             *
-             * @param fields Fields that should be set to this item.
-             */
-            void set_fields(const std::vector<Field>& fields);
-
-            /**
              * @brief Method for getting item id.
              * @return Item id.
              */
-            const std::string& get_id() const;
+            std::string get_id() const;
+
+            /**
+             * @brief Generate new id.
+             */
+            std::string set_id();
 
             /**
              * @brief Number of fields in item.
@@ -178,114 +167,18 @@ namespace electronpass {
          * @brief Constructor for creating wallet populated with items.
          * @param items_ Items that should be stored in the wallet.
          */
-        Wallet(const std::vector<Item>& items_): items{items_} {}
+        Wallet(const std::map<std::string, Item>& items_): items{items_} {}
 
         /**
          * @brief Constructor for creating wallet populated with items and timestamp.
          * @param timestamp_ Wallet timestamp.
          * @param items_ Items that are stored in the wallet.
          */
-        Wallet(uint64_t timestamp_, const std::vector<Item>& items_): timestamp(timestamp_), items{items_} {}
-
-        /**
-         * @brief Method for reading the items.
-         *
-         * This method returns all items in the Wallet. You should not rearrange the elements in the vector, because the
-         * indices of the elements act as the ids by which you can modify specific
-         * elements with other methods in this class.
-         *
-         * @return Vector of item names.
-         */
-        const std::vector<Item>& get_items() const;
-
-        /**
-         * @brief Method for setting the items.
-         *
-         * This methods overrides all existing items with the items that you provide as the parameter. It can be
-         * used if you want to populate the items after the wallet has been initialized.
-         *
-         * @param items Items that should be stored in the wallet.
-         */
-        void set_items(const std::vector<Item>& items);
-
-        /**
-         * @brief Get a specific item.
-         *
-         * Error codes:
-         * - 0: success
-         * - 1: index out of bounds error
-         *
-         * @param index Index of the item.  Index is the same as the index from get_items method.
-         * @param error Error is set to 0 if no error occured. For other error codes look at the detailed description.
-         * @return
-         */
-        Item get_item(unsigned int index, int& error) const;
-
-        /**
-         * @brief Set an item at specific index to new Item.
-         *
-         * Item with this index must already exist. This method is used to override the item when, for instance, user
-         * edits the item.
-         *
-         * Error codes:
-         * - 0: success
-         * - 1: index out of bounds error
-         *
-         * @param index Index of the field that should be set.
-         * @param item The item that will be set
-         * @param error Error is set to appropriate error code. For error codes look at the detailed description.
-         */
-        void set_item(unsigned int index, const Item& item, int& error);
-
-        /**
-         * @brief Add an item to the wallet.
-         *
-         * This method is used to append an item to the wallet (for instance when user adds another item(password entry)).
-         *
-         * @param item Item that should be added.
-         */
-        void add_item(const Item& item);
-
-        /**
-         * @brief Delete an item from the wallet.
-         *
-         * This method is used to delete an item from the wallet (for instance, when user deletes an item(password)).
-         *
-         * Error codes:
-         * - 0: success
-         * - 1: index out of bounds
-         *
-         * @param index Index of the item that should be deleted.
-         * @param error Error is set to appropriate error code. For error codes look at the detailed description.
-         * @return atomik harmonikDeleted item.
-         */
-        Item delete_item(unsigned int index, int& error);
-
-        /**
-         * @brief Number of items in the wallet.
-         *
-         * @return Number of items.
-         */
-        unsigned long size();
-
-        /**
-         * @brief Array subscript for items.
-         * @param index Index of item.
-         * @return Item
-         */
-        Item& operator[](unsigned long index);
-
-        /**
-         * @brief Array subscript for items in constant wallets.
-         * @param index Index of item.
-         * @return Item
-         */
-        const Item& operator[](unsigned long index) const;
+        Wallet(uint64_t timestamp_, const std::map<std::string, Item>& items_): timestamp(timestamp_), items{items_} {}
 
         /// Date when the Wallet was saved.
         uint64_t timestamp = 0;
-      private:
-        std::vector<Item> items;
+        std::map<std::string, Item> items;
     };
 }
 

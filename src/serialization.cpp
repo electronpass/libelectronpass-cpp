@@ -57,14 +57,14 @@ Wallet serialization::deserialize(const std::string& json) {
     Json::Reader reader;
     reader.parse(json.c_str(), root);
 
-    std::vector<Wallet::Item> items;
+    std::map<std::string, Wallet::Item> items;
 
-    Json::Value raw_items = root["items"];
-    for (Json::Value raw_item : raw_items) {
+    Json::Value::Members raw_items = root["items"].getMemberNames();
+    for (std::string id : raw_items) {
+        Json::Value raw_item = root["items"][id];
         std::string name = raw_item["name"].asString();
 
         std::vector<Wallet::Field> fields;
-
         Json::Value raw_fields = raw_item["fields"];
         for (Json::Value raw_field : raw_fields) {
             std::string field_name = raw_field["name"].asString();
@@ -76,10 +76,9 @@ Wallet serialization::deserialize(const std::string& json) {
             fields.push_back(field);
         }
 
-        Wallet::Item item(name, fields);
-        items.push_back(item);
+        Wallet::Item item(name, fields, id);
+        items[id] = item;
     }
-
     uint64_t timestamp = root["timestamp"].asUInt64();
 
     return Wallet(timestamp, items);
@@ -90,12 +89,12 @@ std::string serialization::serialize(const Wallet& wallet) {
     root["timestamp"] = wallet.timestamp;
     root["items"] = Json::Value();
 
-    std::vector<Wallet::Item> items = wallet.get_items();
-    for (unsigned int i = 0; i < items.size(); ++i) {
+    std::map<std::string, Wallet::Item> items = wallet.items;
+    for (auto i = items.begin(); i != items.end(); ++i) {
         Json::Value item;
-        item["name"] = items[i].name;
+        item["name"] = i->second.name;
 
-        std::vector<Wallet::Field> fields = items[i].get_fields();
+        std::vector<Wallet::Field> fields = i->second.fields;
         Json::Value json_fields;
         for (unsigned int j = 0; j < fields.size(); ++j) {
             Json::Value field;
@@ -107,7 +106,7 @@ std::string serialization::serialize(const Wallet& wallet) {
         }
 
         item["fields"] = json_fields;
-        root["items"][i] = item;
+        root["items"][i->first] = item;
     }
 
     Json::StreamWriterBuilder builder;

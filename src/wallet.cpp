@@ -34,71 +34,13 @@ Wallet::Item::Item(const std::string &name_, const std::vector<Field> &fields_, 
     else id = id_;
 }
 
-const std::string& Wallet::Item::get_id() const {
+std::string Wallet::Item::get_id() const {
     return id;
 }
 
-const std::vector<Wallet::Item> &Wallet::get_items() const {
-    return items;
-}
-
-void Wallet::set_items(const std::vector<Item> &items_) {
-    items = items_;
-}
-
-Wallet::Item Wallet::get_item(unsigned int index, int &error) const {
-    if (index >= items.size()) {
-        error = 1;
-        return Item();
-    }
-
-    error = 0;
-    return items[index];
-}
-
-void Wallet::set_item(unsigned int index, const Item &item, int &error) {
-    if (index >= items.size()) {
-        error = 1;
-        return;
-    }
-
-    error = 0;
-    items[index] = item;
-}
-
-void Wallet::add_item(const Item &item) {
-    items.push_back(item);
-}
-
-Wallet::Item Wallet::delete_item(unsigned int index, int &error) {
-    if (index >= items.size()) {
-        error = 1;
-        return Item();
-    }
-
-    Item item = items[index];
-    items.erase(items.begin() + index);
-    return item;
-}
-
-const std::vector<Wallet::Field> &Wallet::Item::get_fields() const {
-    return fields;
-}
-
-void Wallet::Item::set_fields(const std::vector<Field> &fields_) {
-    fields = fields_;
-}
-
-unsigned long Wallet::size() {
-    return items.size();
-}
-
-Wallet::Item &Wallet::operator[](unsigned long index) {
-    return items[index];
-}
-
-const Wallet::Item &Wallet::operator[](unsigned long index) const {
-    return items[index];
+std::string Wallet::Item::set_id() {
+    id = Crypto::generate_uuid();
+    return id;
 }
 
 unsigned long Wallet::Item::size() {
