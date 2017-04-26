@@ -30,7 +30,7 @@ We are using JSON because it is flexible and allows us for future extensions. Un
       ]
     },
     {
-      "id": 'f26cfe5b0596bb5077db7f7c0e19d9e5",
+      "id": "f26cfe5b0596bb5077db7f7c0e19d9e5",
       "name": "Firefox",
       "fields": [
         {
