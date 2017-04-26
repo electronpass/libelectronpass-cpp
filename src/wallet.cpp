@@ -84,3 +84,9 @@ std::vector<std::string> Wallet::get_ids() const {
 void Wallet::add_item(const Item &item) {
     items[item.get_id()] = item;
 }
+
+void Wallet::update_timestamp() {
+    auto now = std::chrono::system_clock::now();
+    auto new_timestamp = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch());
+    timestamp = static_cast<uint64_t>(new_timestamp.count());
+}

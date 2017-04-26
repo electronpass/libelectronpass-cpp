@@ -224,21 +224,16 @@ namespace electronpass {
         void add_item(const Item& item);
 
         /// Method for setting wallet timestamp to current system time.
-        void update_timestamp() {
-            auto now = std::chrono::system_clock::now();
-            auto new_timestamp = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch());
-            timestamp = new_timestamp.count();
-        }
+        void update_timestamp();
 
         /// Date when the Wallet was saved.
-        uint64_t timestamp = 0;
+        uint64_t timestamp;
 
         /**
          * @brief Wallet items.
          *
          * Each item is represented as an id, item pair. Item's id also acts as a key in the map. Read wallet's documentation
          * for more about working with items.
-         *
          */
         std::map<std::string, Item> items;
     };
