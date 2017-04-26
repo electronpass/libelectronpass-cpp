@@ -164,6 +164,13 @@ namespace electronpass {
         Wallet(const std::vector<Item>& items_): items{items_} {}
 
         /**
+         * @brief Constructor for creating wallet populated with items and timestamp.
+         * @param timestamp_ Wallet timestamp.
+         * @param items_ Items that are stored in the wallet.
+         */
+        Wallet(uint64_t timestamp_, const std::vector<Item>& items_): timestamp(timestamp_), items{items_} {}
+
+        /**
          * @brief Method for reading the items.
          *
          * This method returns all items in the Wallet. You should not rearrange the elements in the vector, because the
@@ -257,6 +264,9 @@ namespace electronpass {
          * @return Item
          */
         const Item& operator[](unsigned long index) const;
+
+        /// Date when the Wallet was saved.
+        uint64_t timestamp = 0;
       private:
         std::vector<Item> items;
     };

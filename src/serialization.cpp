@@ -80,11 +80,14 @@ Wallet serialization::deserialize(const std::string& json) {
         items.push_back(item);
     }
 
-    return Wallet(items);
+    uint64_t timestamp = root["timestamp"].asUInt64();
+
+    return Wallet(timestamp, items);
 }
 
-std::string serialization::serialize(const Wallet &wallet) {
+std::string serialization::serialize(const Wallet& wallet) {
     Json::Value root;
+    root["timestamp"] = wallet.timestamp;
     root["items"] = Json::Value();
 
     std::vector<Wallet::Item> items = wallet.get_items();
