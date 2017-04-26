@@ -55,6 +55,16 @@ const Wallet::Field &Wallet::Item::operator[](unsigned long index) const {
     return fields[index];
 }
 
+Wallet::Wallet(uint64_t timestamp_) {
+    if (timestamp_ == 0) update_timestamp();
+    else timestamp = timestamp_;
+}
+
+Wallet::Wallet(const std::map<std::string, Item> &items_, uint64_t timestamp_): items{items_} {
+    if (timestamp_ == 0) update_timestamp();
+    else timestamp = timestamp_;
+}
+
 void Wallet::edit_item(const std::string& id, const std::string& name, const std::vector<Field>& fields) {
     items[id].name = name;
     items[id].fields = fields;

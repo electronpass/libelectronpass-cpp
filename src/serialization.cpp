@@ -81,7 +81,7 @@ Wallet serialization::deserialize(const std::string& json) {
     }
     uint64_t timestamp = root["timestamp"].asUInt64();
 
-    return Wallet(timestamp, items);
+    return Wallet(items, timestamp);
 }
 
 std::string serialization::serialize(const Wallet& wallet) {

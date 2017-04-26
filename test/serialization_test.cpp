@@ -29,8 +29,8 @@ TEST(SerializationTest, SerializationTest) {
 }
 
 TEST(SerializationTest, EmptySerializationTest) {
-    std::string json = electronpass::serialization::serialize(electronpass::Wallet());
-    EXPECT_EQ(json, "{\"items\":null,\"timestamp\":0}");
+    std::string json = electronpass::serialization::serialize(electronpass::Wallet(1));
+    EXPECT_EQ(json, "{\"items\":null,\"timestamp\":1}");
 }
 
 TEST(SerializationTest, DeserializationTest) {
@@ -57,8 +57,8 @@ TEST(SerializationTest, DeserializationTest) {
 }
 
 TEST(SerializationTest, EmptyDeserializationTest) {
-    std::string json = "{\"items\":null,\"timestamp\":0}";
+    std::string json = "{\"items\":null,\"timestamp\":1}";
     electronpass::Wallet wallet = electronpass::serialization::deserialize(json);
     EXPECT_EQ(wallet.items.size(), static_cast<unsigned int>(0));
-    EXPECT_EQ(wallet.timestamp, static_cast<uint64_t>(0));
+    EXPECT_EQ(wallet.timestamp, static_cast<uint64_t>(1));
 }

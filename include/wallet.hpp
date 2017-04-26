@@ -182,21 +182,18 @@ namespace electronpass {
         };
 
 
-        /// Constructor for creating empty wallet.
-        Wallet() {};
+        /**
+         * @brief Constructor for creating empty wallet.
+         * @param timestamp_ Wallet timestamp. If 0, then update_timestamp() is called.
+         */
+        Wallet(uint64_t timestamp_ = 0);
 
         /**
          * @brief Constructor for creating wallet populated with items.
-         * @param items_ Items that should be stored in the wallet.
-         */
-        Wallet(const std::map<std::string, Item>& items_): items{items_} {}
-
-        /**
-         * @brief Constructor for creating wallet populated with items and timestamp.
-         * @param timestamp_ Wallet timestamp.
+         * @param timestamp_ Wallet timestamp. If 0, then update_timestamp() is called.
          * @param items_ Items that are stored in the wallet.
          */
-        Wallet(uint64_t timestamp_, const std::map<std::string, Item>& items_): timestamp(timestamp_), items{items_} {}
+        Wallet(const std::map<std::string, Item>& items_, uint64_t timestamp_ = 0);
 
         /**
          * @brief Method for editing items.
