@@ -24,7 +24,6 @@ electronpass::Wallet test_wallet() {
 
 TEST(SerializationTest, SerializationTest) {
     std::string json = electronpass::serialization::serialize(test_wallet());
-    std::cout << json << std::endl;
     std::string json_string = "{\"items\":{\"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp\":{\"fields\":[{\"name\":\"Username\",\"sensitive\":false,\"type\":\"username\",\"value\":\"open_user\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"secret_pa55\"}],\"name\":\"Google\"},\"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba\":{\"fields\":[{\"name\":\"E-mail\",\"sensitive\":false,\"type\":\"email\",\"value\":\"electron.pass@mail.com\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"reallynotsecurepass123\"}],\"name\":\"Google\"}},\"timestamp\":1493189805}";
     EXPECT_EQ(json, json_string);
 }

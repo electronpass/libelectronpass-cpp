@@ -38,6 +38,27 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 namespace electronpass {
     /**
      * @brief Class for storing and interacting with passwords.
+     *
+     * Accessing items can be done by using items property which is a map. Wallet has some methods that simplify common
+     * operations. All the methods listed below can be replaced by accessing items map directly. If you do that be careful
+     * about handling ids.
+     *
+     * #### Listing ids
+     * Listing ids of all the items in the wallet can be done by using get_ids() method.
+     *
+     * #### Getting an item
+     * Getting an item can be done by using map's getter method on items (items[id])
+     *
+     * #### Adding an item
+     * You should use add_item(const Item&) method for adding an item, so you don't have to worry about setting
+     * the item's id as the key in the map.
+     *
+     * #### Editing an item
+     * You should use edit_item(const std::string&, const std::string&, const std::vector<Field>&) for editing the item
+     * to preserve the id of the item being edited.
+     *
+     * #### Deleting an item
+     * Deleting an item can be done by using the standard map's erase(const std::string& id) method (items.erase(id)).
      */
     class Wallet {
       public:
@@ -176,8 +197,42 @@ namespace electronpass {
          */
         Wallet(uint64_t timestamp_, const std::map<std::string, Item>& items_): timestamp(timestamp_), items{items_} {}
 
+        /**
+         * @brief Method for editing items.
+         *
+         * This method should be used for editing the item, because it keeps the id of the item you are editing.
+         *
+         * @param id Id of the item being edited.
+         * @param name Changed name of the item.
+         * @param fields New fields in the item.
+         */
+        void edit_item(const std::string& id, const std::string& name, const std::vector<Field>& fields);
+
+        /**
+         * @brief Get all ids of all the items stored in the wallet.
+         * @return Vector of all ids.
+         */
+        std::vector<std::string> get_ids() const;
+
+        /**
+         * @brief Add item to the wallet.
+         *
+         * Use this method for adding an item to the wallet. You could also do this by calling ```wallet.items[item.get_id()] = item```.
+         *
+         * @param item Item to add to the wallet.
+         */
+        void add_item(const Item& item);
+
         /// Date when the Wallet was saved.
         uint64_t timestamp = 0;
+
+        /**
+         * @brief Wallet items.
+         *
+         * Each item is represented as an id, item pair. Item's id also acts as a key in the map. Read wallet's documentation
+         * for more about working with items.
+         *
+         */
         std::map<std::string, Item> items;
     };
 }

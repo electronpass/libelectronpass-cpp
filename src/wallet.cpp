@@ -54,3 +54,23 @@ Wallet::Field &Wallet::Item::operator[](unsigned long index) {
 const Wallet::Field &Wallet::Item::operator[](unsigned long index) const {
     return fields[index];
 }
+
+void Wallet::edit_item(const std::string& id, const std::string& name, const std::vector<Field>& fields) {
+    items[id].name = name;
+    items[id].fields = fields;
+}
+
+std::vector<std::string> Wallet::get_ids() const {
+    std::vector<std::string> ids(items.size());
+    int i = 0;
+    for (std::map<std::string, Item>::const_iterator it = items.begin(); it != items.end(); ++it) {
+        ids[i] = it->first;
+        ++i;
+    }
+
+    return ids;
+}
+
+void Wallet::add_item(const Item &item) {
+    items[item.get_id()] = item;
+}
