@@ -19,11 +19,30 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace electronpass;
 
-std::vector<Wallet::Item> Wallet::get_items() const {
+Wallet::Item::Item() {
+    id = Crypto::generate_uuid();
+}
+
+Wallet::Item::Item(const std::string &name_, std::string id_): name{name_} {
+    if (id_ == "") id = Crypto::generate_uuid();
+    else id = id_;
+}
+
+Wallet::Item::Item(const std::string &name_, const std::vector<Field> &fields_, std::string id_): fields {fields_},
+                                                                                                  name{name_} {
+    if (id_ == "") id = Crypto::generate_uuid();
+    else id = id_;
+}
+
+const std::string& Wallet::Item::get_id() const {
+    return id;
+}
+
+const std::vector<Wallet::Item> &Wallet::get_items() const {
     return items;
 }
 
-void Wallet::set_items(const std::vector<Item>& items_) {
+void Wallet::set_items(const std::vector<Item> &items_) {
     items = items_;
 }
 
@@ -62,7 +81,7 @@ Wallet::Item Wallet::delete_item(unsigned int index, int &error) {
     return item;
 }
 
-std::vector<Wallet::Field> Wallet::Item::get_fields() const {
+const std::vector<Wallet::Field> &Wallet::Item::get_fields() const {
     return fields;
 }
 
@@ -74,11 +93,11 @@ unsigned long Wallet::size() {
     return items.size();
 }
 
-Wallet::Item& Wallet::operator[](unsigned long index) {
+Wallet::Item &Wallet::operator[](unsigned long index) {
     return items[index];
 }
 
-const Wallet::Item& Wallet::operator[](unsigned long index) const {
+const Wallet::Item &Wallet::operator[](unsigned long index) const {
     return items[index];
 }
 
@@ -86,10 +105,10 @@ unsigned long Wallet::Item::size() {
     return fields.size();
 }
 
-Wallet::Field& Wallet::Item::operator[](unsigned long index) {
+Wallet::Field &Wallet::Item::operator[](unsigned long index) {
     return fields[index];
 }
 
-const Wallet::Field& Wallet::Item::operator[](unsigned long index) const {
+const Wallet::Field &Wallet::Item::operator[](unsigned long index) const {
     return fields[index];
 }

@@ -6,6 +6,7 @@ set(TEST_FILES
     crypto_test.cpp
     serialization_test.cpp
     passwords_test.cpp
+    wallet_test.cpp
 )
 
 add_executable(tests ${TEST_FILES})

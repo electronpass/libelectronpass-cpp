@@ -21,6 +21,8 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <string>
 
+#include "crypto.hpp"
+
 /**
  * @file wallet.hpp
  * @author Vid Drobnič <vid.drobnic@protonmail.com>
@@ -93,22 +95,31 @@ namespace electronpass {
          */
         class Item {
             std::vector<Field> fields;
+            std::string id;
           public:
-            /// Constructor for creating an empty item.
-            Item() {}
-            /**
-             * @brief Constructor for creating fully populated item.
-             * @param name_ Display name for the item.
-             * @param fields_ Fields in the item. For more info about fields read Wallet::Field.
-             */
-
-            Item(const std::string& name_, const std::vector<Field>& fields_): fields{fields_}, name{name_} {}
+            /// Constructor for creating an empty item. New id will be set to the item.
+            Item();
 
             /**
              * @brief Constructor for creating item with name and empty fields.
+             *
+             * If id is not set, then random id will be generated.
+             *
+             * @param id_ Item id.
              * @param name_ Display name for the item.
              */
-            Item(const std::string& name_): name{name_} {}
+            Item(const std::string& name_, std::string id_ = "");
+
+            /**
+             * @brief Constructor for creating fully populated item.
+             *
+             * If id is not set, then random id will be generated.
+             *
+             * @param id_ Item id.
+             * @param name_ Display name for the item.
+             * @param fields_ Fields in the item. For more info about fields read Wallet::Field.
+             */
+            Item(const std::string& name_, const std::vector<Field>& fields_, std::string id_ = "");
 
             /// Display name for the item.
             std::string name;
@@ -120,7 +131,7 @@ namespace electronpass {
              *
              * @return Vector of fields.
              */
-            std::vector<Field> get_fields() const;
+            const std::vector<Field>& get_fields() const;
 
             /**
              * @brief Method for setting the fields.
@@ -131,6 +142,12 @@ namespace electronpass {
              * @param fields Fields that should be set to this item.
              */
             void set_fields(const std::vector<Field>& fields);
+
+            /**
+             * @brief Method for getting item id.
+             * @return Item id.
+             */
+            const std::string& get_id() const;
 
             /**
              * @brief Number of fields in item.
@@ -179,7 +196,7 @@ namespace electronpass {
          *
          * @return Vector of item names.
          */
-        std::vector<Item> get_items() const;
+        const std::vector<Item>& get_items() const;
 
         /**
          * @brief Method for setting the items.
@@ -240,7 +257,7 @@ namespace electronpass {
          *
          * @param index Index of the item that should be deleted.
          * @param error Error is set to appropriate error code. For error codes look at the detailed description.
-         * @return Deleted item.
+         * @return atomik harmonikDeleted item.
          */
         Item delete_item(unsigned int index, int& error);
 
