@@ -100,6 +100,13 @@ namespace electronpass {
          * @return Decoded string.
          */
         static std::string base64_decode(const std::string& s);
+
+        /**
+         * @brief Generate UUID used for identifying items.
+         * @return UUID
+         */
+        // TODO: tests
+        static std::string generate_uuid();
     };
 }
 

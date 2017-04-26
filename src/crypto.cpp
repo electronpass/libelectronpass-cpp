@@ -151,3 +151,15 @@ std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text,
 bool electronpass::Crypto::check() {
     return sodium_success;
 }
+
+std::string electronpass::Crypto::generate_uuid() {
+    const unsigned int uuid_size = 24; // Bytes
+    unsigned char uuid[uuid_size];
+    randombytes_buf(uuid, uuid_size);
+
+    std::string uuid_str(uuid_size, '/');
+    for (unsigned long long i = 0; i < uuid_size; ++i) uuid_str[i] = uuid[i];
+    uuid_str = Crypto::base64_encode(uuid_str);
+
+    return uuid_str;
+}
