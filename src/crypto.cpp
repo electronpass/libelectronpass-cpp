@@ -153,6 +153,8 @@ bool electronpass::Crypto::check() {
 }
 
 std::string electronpass::Crypto::generate_uuid() {
+    assert(sodium_init() != -1);
+
     const unsigned int uuid_size = 24; // Bytes
     unsigned char uuid[uuid_size];
     randombytes_buf(uuid, uuid_size);

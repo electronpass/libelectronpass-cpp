@@ -20,6 +20,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <sodium.h>
 #include <string>
+#include <cassert>
 
 /**
  * @file crypto.hpp
