@@ -9,8 +9,10 @@ We are using JSON because it is flexible and allows us for future extensions. Un
 
 ```
 {
+  "timestamp": 1493189805,
   "items": [
     {
+      "id": "fed8f5d6744128839ed7390f84268a78",
       "name": "Google",
       "fields": [
         {
@@ -28,6 +30,7 @@ We are using JSON because it is flexible and allows us for future extensions. Un
       ]
     },
     {
+      "id": 'f26cfe5b0596bb5077db7f7c0e19d9e5",
       "name": "Firefox",
       "fields": [
         {
@@ -49,7 +52,9 @@ We are using JSON because it is flexible and allows us for future extensions. Un
 
 ```
 
-Items is array of passwords that user has stored. Each item has a ```name``` field which is a display name for the field. It also has a ```fields``` attribute which is an array of fields for the entry. Each field has 3 properties:
+Timestamp is a unix timestamp. It is set to the time when the wallet was saved. Merge of 2 wallets then takes the newer one.
+
+Items is array of passwords that user has stored. Each item has a ```name``` field which is a display name for the field and an ```id``` property which is an unique id for the item. It also has a ```fields``` attribute which is an array of fields for the entry. Each field has 3 properties:
 
 - ```name``` represents a display name, that is shown to the user
 - ```type``` represents a field type. Types are explained in the next section of this document
