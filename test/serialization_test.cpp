@@ -15,8 +15,8 @@ electronpass::Wallet test_wallet() {
     electronpass::Wallet::Field google2_password("Password", "reallynotsecurepass123", electronpass::Wallet::FieldType::PASSWORD, true);
     google2.fields = {google2_email, google2_password};
 
-    wallet.items[google1.get_id()] = google1;
-    wallet.items[google2.get_id()] = google2;
+    wallet.add_item(google1);
+    wallet.add_item(google2);
     wallet.timestamp = 1493189805;
 
     return wallet;
@@ -38,15 +38,15 @@ TEST(SerializationTest, DeserializationTest) {
     electronpass::Wallet wallet = electronpass::serialization::deserialize(json_string);
 
     EXPECT_EQ(wallet.timestamp, static_cast<uint64_t>(1493189805));
-    for (auto it = wallet.items.begin(); it != wallet.items.end(); ++it) {
-        std::string id = it->first;
-        electronpass::Wallet::Item item = it->second;
+    std::vector<std::string> ids = wallet.get_ids();
+    for (std::string id : ids) {
+        electronpass::Wallet::Item item = wallet[id];
 
         EXPECT_EQ(id, item.get_id());
 
-        EXPECT_EQ(item.name, test_wallet().items[id].name);
+        EXPECT_EQ(item.name, test_wallet()[id].name);
         std::vector<electronpass::Wallet::Field> fields = item.fields;
-        std::vector<electronpass::Wallet::Field> test_fields = test_wallet().items[id].fields;
+        std::vector<electronpass::Wallet::Field> test_fields = test_wallet()[id].fields;
         for (unsigned int j = 0; j < fields.size(); ++j) {
             EXPECT_EQ(fields[j].name, test_fields[j].name);
             EXPECT_EQ(fields[j].field_type, test_fields[j].field_type);
@@ -59,6 +59,6 @@ TEST(SerializationTest, DeserializationTest) {
 TEST(SerializationTest, EmptyDeserializationTest) {
     std::string json = "{\"items\":null,\"timestamp\":1}";
     electronpass::Wallet wallet = electronpass::serialization::deserialize(json);
-    EXPECT_EQ(wallet.items.size(), static_cast<unsigned int>(0));
+    EXPECT_EQ(wallet.size(), static_cast<unsigned int>(0));
     EXPECT_EQ(wallet.timestamp, static_cast<uint64_t>(1));
 }

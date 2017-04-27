@@ -89,12 +89,12 @@ std::string serialization::serialize(const Wallet& wallet) {
     root["timestamp"] = wallet.timestamp;
     root["items"] = Json::Value();
 
-    std::map<std::string, Wallet::Item> items = wallet.items;
-    for (auto i = items.begin(); i != items.end(); ++i) {
+    std::vector<std::string> ids = wallet.get_ids();
+    for (std::string id : ids) {
         Json::Value item;
-        item["name"] = i->second.name;
+        item["name"] = wallet[id].name;
 
-        std::vector<Wallet::Field> fields = i->second.fields;
+        std::vector<Wallet::Field> fields = wallet[id].fields;
         Json::Value json_fields;
         for (unsigned int j = 0; j < fields.size(); ++j) {
             Json::Value field;
@@ -106,7 +106,7 @@ std::string serialization::serialize(const Wallet& wallet) {
         }
 
         item["fields"] = json_fields;
-        root["items"][i->first] = item;
+        root["items"][id] = item;
     }
 
     Json::StreamWriterBuilder builder;

@@ -40,26 +40,16 @@ namespace electronpass {
     /**
      * @brief Class for storing and interacting with passwords.
      *
-     * Accessing items can be done by using items property which is a map. Wallet has some methods that simplify common
-     * operations. All the methods listed below can be replaced by accessing items map directly. If you do that be careful
-     * about handling ids.
+     * Accessing items can be done by using operator[] on the wallet. Some common operations for working with the
+     * wallet are:
      *
-     * #### Listing ids
-     * Listing ids of all the items in the wallet can be done by using get_ids() method.
-     *
-     * #### Getting an item
-     * Getting an item can be done by using map's getter method on items (items[id])
-     *
-     * #### Adding an item
-     * You should use add_item(const Item&) method for adding an item, so you don't have to worry about setting
-     * the item's id as the key in the map.
-     *
-     * #### Editing an item
-     * You should use edit_item(const std::string&, const std::string&, const std::vector<Field>&) for editing the item
-     * to preserve the id of the item being edited.
-     *
-     * #### Deleting an item
-     * Deleting an item can be done by using the standard map's erase(const std::string& id) method (items.erase(id)).
+     * - **Listing ids**: get_ids()
+     * - **Getting an item**: operator[](const std::string&) const
+     * - **Adding an item**: add_item(const Item&)
+     * - **Editing an item**: edit_item(const std::string&, const std::string&, const std::vector<Field>&) to preserve the
+     * id of the item being edited.
+     * - **Deleting an item**: delete_item(const std::string&)
+     * - **Wallet size**: size()
      */
     class Wallet {
       public:
@@ -217,24 +207,45 @@ namespace electronpass {
          *
          * Use this method for adding an item to the wallet. You could also do this by calling ```wallet.items[item.get_id()] = item```.
          *
-         * WARNING: If item with same `id` already exists, then it will be overwritten.
+         * If the item already exists in the wallet, then it will not be added. In this case the method returns false.
          *
          * @param item Item to add to the wallet.
+         * @return True if the item was added to the wallet otherwise false.
          */
-        void add_item(const Item& item);
+        bool add_item(const Item& item);
+
+        /**
+         * @brief Delete item from the wallet.
+         * @param id Id of the Item to be deleted.
+         * @return Deleted Item.
+         */
+        Item delete_item(const std::string& id);
+
+        /**
+         * @brief Get Item from the wallet
+         *
+         * Retrieved item is not a reference, therefore you cannot set a new item this way. For that you should use add_item(const Item&).
+         * Changes done to the retrieved item are also not stored in the wallet. For that you should use
+         * edit_item(const std::string&, const std::string&, const std::vector<Field>&). This is so you cannot change the
+         * item to a new id without changing the key in the wallet to the new id.
+         *
+         * @param id Id of the item.
+         * @return Item in the wallet. Empty if it doesn't exist.
+         */
+        Item operator[](const std::string& id) const;
+
+        /**
+         * @brief Get number of items in the wallet.
+         * @return Number of items in the wallet.
+         */
+        unsigned long size() const;
 
         /// Method for setting wallet timestamp to current system time.
         void update_timestamp();
 
         /// Date when the Wallet was saved.
         uint64_t timestamp;
-
-        /**
-         * @brief Wallet items.
-         *
-         * Each item is represented as an id, item pair. Item's id also acts as a key in the map. Read wallet's documentation
-         * for more about working with items.
-         */
+    private:
         std::map<std::string, Item> items;
     };
 }

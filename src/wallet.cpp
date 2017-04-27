@@ -65,11 +65,6 @@ Wallet::Wallet(const std::map<std::string, Item> &items_, uint64_t timestamp_): 
     else timestamp = timestamp_;
 }
 
-void Wallet::edit_item(const std::string& id, const std::string& name, const std::vector<Field>& fields) {
-    items[id].name = name;
-    items[id].fields = fields;
-}
-
 std::vector<std::string> Wallet::get_ids() const {
     std::vector<std::string> ids(items.size());
     int i = 0;
@@ -81,8 +76,33 @@ std::vector<std::string> Wallet::get_ids() const {
     return ids;
 }
 
-void Wallet::add_item(const Item &item) {
-    items[item.get_id()] = item;
+Wallet::Item Wallet::operator[](const std::string& id) const {
+    return items.at(id);
+}
+
+bool Wallet::add_item(const Item &item) {
+    std::map<std::string, Item>::iterator it = items.find(item.get_id());
+    if (it == items.end()) {
+        items[item.get_id()] = item;
+        return true;
+    }
+
+    return false;
+}
+
+void Wallet::edit_item(const std::string& id, const std::string& name, const std::vector<Field>& fields) {
+    items[id].name = name;
+    items[id].fields = fields;
+}
+
+Wallet::Item Wallet::delete_item(const std::string& id) {
+    Item item = items[id];
+    items.erase(id);
+    return item;
+}
+
+unsigned long Wallet::size() const {
+    return items.size();
 }
 
 void Wallet::update_timestamp() {
