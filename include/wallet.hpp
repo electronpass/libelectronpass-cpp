@@ -164,7 +164,7 @@ namespace electronpass {
              * @brief Number of fields in item.
              * @return Number of fields
              */
-            unsigned long size();
+            unsigned long size() const;
 
             /**
              * @brief Array subscript for field in item.
@@ -219,6 +219,8 @@ namespace electronpass {
          * @brief Add item to the wallet.
          *
          * Use this method for adding an item to the wallet. You could also do this by calling ```wallet.items[item.get_id()] = item```.
+         *
+         * WARNING: If item with same `id` already exists, then it will be overwritten.
          *
          * @param item Item to add to the wallet.
          */

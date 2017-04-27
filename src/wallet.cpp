@@ -43,7 +43,7 @@ std::string Wallet::Item::set_id() {
     return id;
 }
 
-unsigned long Wallet::Item::size() {
+unsigned long Wallet::Item::size() const {
     return fields.size();
 }
 
