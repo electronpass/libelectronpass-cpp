@@ -62,10 +62,26 @@ namespace electronpass {
          * - EMAIL: for storing email addresses
          * - URL: for storing url of website on which the password is used
          * - PIN: for storing numeric values
+         * - DATE: for storing date
+         * - OTHER: for storing other than what is listed above
          */
         enum class FieldType {
-            USERNAME, PASSWORD, EMAIL, URL, PIN, UNDEFINED
+            USERNAME, PASSWORD, EMAIL, URL, PIN, DATE, OTHER, UNDEFINED
         };
+
+        /**
+         * @brief Convert FieldType to string.
+         * @param field_type FieldType to be converted.
+         * @return FieldType as string.
+         */
+        static std::string field_type_to_string(FieldType field_type);
+
+        /**
+         * @brief Convert string to field type.
+         * @param field_type String to be converted.
+         * @return String as FieldType
+         */
+        static FieldType string_to_field_type(const std::string& field_type);
 
         /**
          * @brief Struct for storing field data.

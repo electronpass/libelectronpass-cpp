@@ -69,3 +69,5 @@ Currently possible types are:
 - ```email``` for storing email addresses
 - ```url``` for storing on which webpage the password entry is used
 - ```pin``` for storing numeric values only
+- ```date``` for storing dates
+- ```other``` for storing other than what is listed above

@@ -17,7 +17,40 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "wallet.hpp"
 
+#define kFieldTypeUsername "username"
+#define kFieldTypePassword "password"
+#define kFieldTypeEmail "email"
+#define kFieldTypeUrl "url"
+#define kFieldTypePin "pin"
+#define kFieldTypeDate "date"
+#define kFieldTypeOther "other"
+#define kFieldTypeUndefined "undefined";
+
 using namespace electronpass;
+
+Wallet::FieldType Wallet::string_to_field_type(const std::string &field_type) {
+    if (field_type == kFieldTypeUsername) return FieldType::USERNAME;
+    if (field_type == kFieldTypePassword) return FieldType::PASSWORD;
+    if (field_type == kFieldTypeEmail) return FieldType::EMAIL;
+    if (field_type == kFieldTypeUrl) return FieldType::URL;
+    if (field_type == kFieldTypePin) return FieldType::PIN;
+    if (field_type == kFieldTypeDate) return FieldType::DATE;
+    if (field_type == kFieldTypeOther) return FieldType::OTHER;
+    return FieldType::UNDEFINED;
+}
+
+std::string Wallet::field_type_to_string(FieldType field_type) {
+    switch (field_type) {
+        case FieldType::USERNAME: return kFieldTypeUsername;
+        case FieldType::PASSWORD: return kFieldTypePassword;
+        case FieldType::EMAIL: return kFieldTypeEmail;
+        case FieldType::URL: return kFieldTypeUrl;
+        case FieldType::PIN: return kFieldTypePin;
+        case FieldType::DATE: return kFieldTypeDate;
+        case FieldType::OTHER: return kFieldTypeOther;
+        default: return kFieldTypeUndefined;
+    }
+}
 
 Wallet::Item::Item() {
     id = Crypto::generate_uuid();
