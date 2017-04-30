@@ -256,6 +256,18 @@ namespace electronpass {
          */
         unsigned long size() const;
 
+        /**
+         * @brief Merge two wallets together. Used when syncing.
+         *
+         * Method merges two wallets into one. Method is useful when syncing. For now it just returns the newer wallet.
+         * In the future, however, merge will be a better algorithm.
+         *
+         * @param wallet1 First wallet
+         * @param wallet2 Second wallet
+         * @return Merged wallet
+         */
+        static Wallet merge(const Wallet& wallet1, const Wallet& wallet2);
+
         /// Method for setting wallet timestamp to current system time.
         void update_timestamp();
 

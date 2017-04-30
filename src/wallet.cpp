@@ -143,3 +143,7 @@ void Wallet::update_timestamp() {
     auto new_timestamp = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch());
     timestamp = static_cast<uint64_t>(new_timestamp.count());
 }
+
+Wallet Wallet::merge(const Wallet &wallet1, const Wallet &wallet2) {
+    return wallet1.timestamp > wallet2.timestamp ? wallet1 : wallet2;
+}

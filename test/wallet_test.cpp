@@ -24,3 +24,14 @@ TEST(WalletTest, GetIds) {
 
     EXPECT_EQ(wallet.get_ids(), ids);
 }
+
+TEST(WalletTest, Merge) {
+    electronpass::Wallet wallet1;
+    electronpass::Wallet wallet2;
+    ++wallet2.timestamp;
+
+    EXPECT_EQ(electronpass::Wallet::merge(wallet1, wallet2).timestamp, wallet2.timestamp);
+
+    wallet1.timestamp += 2;
+    EXPECT_EQ(electronpass::Wallet::merge(wallet2, wallet1).timestamp, wallet1.timestamp);
+}
