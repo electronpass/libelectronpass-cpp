@@ -257,7 +257,7 @@ namespace electronpass {
         unsigned long size() const;
 
         /**
-         * @brief Merge two wallets together. Used when syncing.
+         * @brief Merge two wallets together.
          *
          * Method merges two wallets into one. Method is useful when syncing. For now it just returns the newer wallet.
          * In the future, however, merge will be a better algorithm.
