@@ -119,18 +119,20 @@ bool Wallet::add_item(const Item &item) {
         items[item.get_id()] = item;
         return true;
     }
-
+    update_timestamp();
     return false;
 }
 
 void Wallet::edit_item(const std::string& id, const std::string& name, const std::vector<Field>& fields) {
     items[id].name = name;
     items[id].fields = fields;
+    update_timestamp();
 }
 
 Wallet::Item Wallet::delete_item(const std::string& id) {
     Item item = items[id];
     items.erase(id);
+    update_timestamp();
     return item;
 }
 
