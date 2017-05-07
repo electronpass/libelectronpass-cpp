@@ -124,7 +124,7 @@ TEST(CryptoTest, DecryptionUniqueTest) {
 }
 
 TEST(CryptoTest, UniqueIDTest) {
-    const unsigned long size = 1000000;
+    const unsigned long size = 500000;
     std::set<std::string> generated_ids;
     for (unsigned long i = 0; i < size; ++i) generated_ids.insert(electronpass::Crypto::generate_uuid());
     EXPECT_EQ(size, generated_ids.size());

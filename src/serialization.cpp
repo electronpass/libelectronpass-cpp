@@ -109,15 +109,15 @@ electronpass::Wallet serialization::load(const std::string &data, const Crypto &
     return wallet;
 }
 
-std::string serialization::save(const Wallet &wallet, const Crypto &crypto, bool &success) {
+std::string serialization::save(const Wallet &wallet, const Crypto &crypto, int &error) {
     bool encrypt;
     std::string data = crypto.encrypt(serialize(wallet), encrypt);
     if (!encrypt) {
-        success = false;
+        error = 1;
         return "{}";
     }
 
-    success = true;
+    error = 0;
 
     Json::Value json;
     json["timestamp"] = wallet.timestamp;

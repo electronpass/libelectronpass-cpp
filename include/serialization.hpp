@@ -73,12 +73,18 @@ namespace electronpass {
 
         /**
          * @brief Converts wallet to json that can be saved on disk.
+         *
+         * Error codes:
+         *
+         * - 0: success
+         * - 1: could not encrypt wallet
+         *
          * @param wallet Wallet to save
          * @param crypto Crypto object used for encryption
-         * @param success Set to true if successful, otherwise false
+         * @param error Error that has occurred
          * @return JSON that can be saved to disk
          */
-        std::string save(const Wallet &wallet, const Crypto &crypto, bool &success);
+        std::string save(const Wallet &wallet, const Crypto &crypto, int &error);
     }
 }
 

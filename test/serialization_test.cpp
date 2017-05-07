@@ -64,11 +64,12 @@ TEST(SerializationTest, EmptyDeserializationTest) {
 TEST(SerializationTest, LoadSaveTest) {
     electronpass::Crypto crypto("password");
     electronpass::Wallet wallet1 = test_wallet();
-    int error;
-    bool success;
-    electronpass::Wallet wallet2 = electronpass::serialization::load(electronpass::serialization::save(wallet1, crypto, success), crypto, error);
+    int error, error2;
+    electronpass::Wallet wallet2 = electronpass::serialization::load(electronpass::serialization::save(wallet1, crypto, error), crypto, error2);
 
     EXPECT_EQ(wallet1.timestamp, wallet2.timestamp);
+    EXPECT_EQ(error, 0);
+    EXPECT_EQ(error2, 0);
 
     std::vector<std::string> ids = wallet2.get_ids();
     for (std::string id : ids) {

@@ -14,12 +14,11 @@ int main() {
     // Save empty wallet
     electronpass::Crypto crypto("random pass");
 
-    bool success;
-    std::string saved_wallet = electronpass::serialization::save(electronpass::Wallet(), crypto, success);
-    std::cout << saved_wallet << std::endl;
+    int error;
+    std::string saved_wallet = electronpass::serialization::save(electronpass::Wallet(), crypto, error);
+    std::cout << error << std::endl << saved_wallet << std::endl;
 
     // Load empty wallet
-    int error;
     wallet = electronpass::serialization::load(saved_wallet, crypto, error);
     std::cout << error << std::endl;
 
