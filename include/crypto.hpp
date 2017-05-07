@@ -68,7 +68,7 @@ namespace electronpass {
          * @return Encrypted plain text, already converted to Base64. If encrypton wasn't successful
          * returns empty string.
          */
-        std::string encrypt(const std::string& plain_text, bool& success);
+        std::string encrypt(const std::string& plain_text, bool& success) const;
 
         /**
          * @brief Decrypts Base64 encoded cipher text.
@@ -77,7 +77,7 @@ namespace electronpass {
          * @param success True if message was decoded from cipher text, false otherwise.
          * @return Decrypted text if decrypting was successful. If not, empty string ("").
          */
-        std::string decrypt(const std::string& cipher_text, bool& success);
+        std::string decrypt(const std::string& cipher_text, bool& success) const;
 
         /**
          * @brief Checks if Crypto initialization was successful.
@@ -86,7 +86,7 @@ namespace electronpass {
          * - generating key from password (sha256 salted hashing)
          * @returns true if everything was ok, otherwise false.
          */
-        bool check();
+        bool check() const;
 
         /**
          * @brief Function for encoding to Base64.
@@ -106,7 +106,6 @@ namespace electronpass {
          * @brief Generate UUID used for identifying items.
          * @return UUID
          */
-        // TODO: tests
         static std::string generate_uuid();
     };
 }

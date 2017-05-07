@@ -24,20 +24,19 @@ electronpass::Wallet test_wallet() {
 
 TEST(SerializationTest, SerializationTest) {
     std::string json = electronpass::serialization::serialize(test_wallet());
-    std::string json_string = "{\"items\":{\"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp\":{\"fields\":[{\"name\":\"Username\",\"sensitive\":false,\"type\":\"username\",\"value\":\"open_user\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"secret_pa55\"}],\"name\":\"Google\"},\"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba\":{\"fields\":[{\"name\":\"E-mail\",\"sensitive\":false,\"type\":\"email\",\"value\":\"electron.pass@mail.com\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"reallynotsecurepass123\"}],\"name\":\"Google\"}},\"timestamp\":1493189805}";
+    std::string json_string = "{\"items\":{\"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp\":{\"fields\":[{\"name\":\"Username\",\"sensitive\":false,\"type\":\"username\",\"value\":\"open_user\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"secret_pa55\"}],\"name\":\"Google\"},\"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba\":{\"fields\":[{\"name\":\"E-mail\",\"sensitive\":false,\"type\":\"email\",\"value\":\"electron.pass@mail.com\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"reallynotsecurepass123\"}],\"name\":\"Google\"}}}";
     EXPECT_EQ(json, json_string);
 }
 
 TEST(SerializationTest, EmptySerializationTest) {
-    std::string json = electronpass::serialization::serialize(electronpass::Wallet(1));
-    EXPECT_EQ(json, "{\"items\":null,\"timestamp\":1}");
+    std::string json = electronpass::serialization::serialize(electronpass::Wallet());
+    EXPECT_EQ(json, "{\"items\":null}");
 }
 
 TEST(SerializationTest, DeserializationTest) {
-    std::string json_string = "{\"items\":{\"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp\":{\"fields\":[{\"name\":\"Username\",\"sensitive\":false,\"type\":\"username\",\"value\":\"open_user\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"secret_pa55\"}],\"name\":\"Google\"},\"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba\":{\"fields\":[{\"name\":\"E-mail\",\"sensitive\":false,\"type\":\"email\",\"value\":\"electron.pass@mail.com\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"reallynotsecurepass123\"}],\"name\":\"Google\"}},\"timestamp\":1493189805}";
+    std::string json_string = "{\"items\":{\"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp\":{\"fields\":[{\"name\":\"Username\",\"sensitive\":false,\"type\":\"username\",\"value\":\"open_user\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"secret_pa55\"}],\"name\":\"Google\"},\"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba\":{\"fields\":[{\"name\":\"E-mail\",\"sensitive\":false,\"type\":\"email\",\"value\":\"electron.pass@mail.com\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"reallynotsecurepass123\"}],\"name\":\"Google\"}}}";
     electronpass::Wallet wallet = electronpass::serialization::deserialize(json_string);
 
-    EXPECT_EQ(wallet.timestamp, static_cast<uint64_t>(1493189805));
     std::vector<std::string> ids = wallet.get_ids();
     for (std::string id : ids) {
         electronpass::Wallet::Item item = wallet[id];
@@ -60,5 +59,30 @@ TEST(SerializationTest, EmptyDeserializationTest) {
     std::string json = "{\"items\":null,\"timestamp\":1}";
     electronpass::Wallet wallet = electronpass::serialization::deserialize(json);
     EXPECT_EQ(wallet.size(), static_cast<unsigned int>(0));
-    EXPECT_EQ(wallet.timestamp, static_cast<uint64_t>(1));
+}
+
+TEST(SerializationTest, LoadSaveTest) {
+    electronpass::Crypto crypto("password");
+    electronpass::Wallet wallet1 = test_wallet();
+    bool success;
+    electronpass::Wallet wallet2 = electronpass::serialization::load(electronpass::serialization::save(wallet1, crypto, success), crypto, success);
+
+    EXPECT_EQ(wallet1.timestamp, wallet2.timestamp);
+
+    std::vector<std::string> ids = wallet2.get_ids();
+    for (std::string id : ids) {
+        electronpass::Wallet::Item item = wallet2[id];
+
+        EXPECT_EQ(id, item.get_id());
+
+        EXPECT_EQ(item.name, wallet1[id].name);
+        std::vector<electronpass::Wallet::Field> fields = item.fields;
+        std::vector<electronpass::Wallet::Field> fields2 = wallet2[id].fields;
+        for (unsigned int j = 0; j < fields.size(); ++j) {
+            EXPECT_EQ(fields[j].name, fields2[j].name);
+            EXPECT_EQ(fields[j].field_type, fields2[j].field_type);
+            EXPECT_EQ(fields[j].value, fields2[j].value);
+            EXPECT_EQ(fields[j].sensitive, fields2[j].sensitive);
+        }
+    }
 }

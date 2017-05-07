@@ -45,7 +45,7 @@ bool electronpass::Crypto::generate_key(const char* password, unsigned int passw
     return true;
 }
 
-std::string electronpass::Crypto::encrypt(const std::string& plain_text, bool& success) {
+std::string electronpass::Crypto::encrypt(const std::string& plain_text, bool& success) const {
     if (!check()) {
         success = false;
         return "";
@@ -97,7 +97,7 @@ std::string electronpass::Crypto::encrypt(const std::string& plain_text, bool& s
     return cipher;
 }
 
-std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text, bool& success) {
+std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text, bool& success) const {
     if (!check()) {
         success = false;
         return "";
@@ -148,7 +148,7 @@ std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text,
     return plain;
 }
 
-bool electronpass::Crypto::check() {
+bool electronpass::Crypto::check() const {
     return sodium_success;
 }
 

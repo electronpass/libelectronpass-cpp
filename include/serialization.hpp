@@ -24,6 +24,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include "json/json.h"
 #include "json/json-forwards.h"
 #include "wallet.hpp"
+#include "crypto.hpp"
 
 /**
  * @file serialization.hpp
@@ -52,6 +53,26 @@ namespace electronpass {
          */
         std::string serialize(const Wallet& wallet);
 
+        /**
+         * @brief Loads wallet object from disk data.
+         *
+         * **Note:** for now version is ignored. Will change in the future.
+         *
+         * @param data Data stored on disk
+         * @param crypto Crypto object used for encryption
+         * @param success Set to true if successful, otherwise false
+         * @return Wallet object
+         */
+        electronpass::Wallet load(const std::string &data, const Crypto &crypto, bool &success);
+
+        /**
+         * @brief Converts wallet to json that can be saved on disk.
+         * @param wallet Wallet to save
+         * @param crypto Crypto object used for encryption
+         * @param success Set to true if successful, otherwise false
+         * @return JSON that can be saved to disk
+         */
+        std::string save(const Wallet &wallet, const Crypto &crypto, bool &success);
     }
 }
 

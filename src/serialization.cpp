@@ -17,6 +17,8 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "serialization.hpp"
 
+#define kWalletVersion 0
+
 using namespace electronpass;
 
 Wallet serialization::deserialize(const std::string& json) {
@@ -46,14 +48,12 @@ Wallet serialization::deserialize(const std::string& json) {
         Wallet::Item item(name, fields, id);
         items[id] = item;
     }
-    uint64_t timestamp = root["timestamp"].asUInt64();
 
-    return Wallet(items, timestamp);
+    return Wallet(items);
 }
 
 std::string serialization::serialize(const Wallet& wallet) {
     Json::Value root;
-    root["timestamp"] = wallet.timestamp;
     root["items"] = Json::Value();
 
     std::vector<std::string> ids = wallet.get_ids();
@@ -79,4 +79,42 @@ std::string serialization::serialize(const Wallet& wallet) {
     Json::StreamWriterBuilder builder;
     builder.settings_["indentation"] = "";
     return Json::writeString(builder, root);
+}
+
+electronpass::Wallet serialization::load(const std::string &data, const Crypto &crypto, bool &success) {
+    Json::Value json;
+    Json::Reader reader;
+    reader.parse(data.c_str(), json);
+
+    bool decrypt;
+    std::string wallet_string = crypto.decrypt(json["data"].asString(), decrypt);
+    if (!decrypt) {
+        success = false;
+        return Wallet();
+    }
+
+    Wallet wallet = deserialize(wallet_string);
+    wallet.timestamp = json["timestamp"].asUInt64();
+    success = true;
+    return wallet;
+}
+
+std::string serialization::save(const Wallet &wallet, const Crypto &crypto, bool &success) {
+    bool encrypt;
+    std::string data = crypto.encrypt(serialize(wallet), encrypt);
+    if (!encrypt) {
+        success = false;
+        return "";
+    }
+
+    success = true;
+
+    Json::Value json;
+    json["timestamp"] = wallet.timestamp;
+    json["version"] = kWalletVersion;
+    json["data"] = data;
+
+    Json::StreamWriterBuilder builder;
+    builder.settings_["indentation"] = "";
+    return Json::writeString(builder, json);
 }
