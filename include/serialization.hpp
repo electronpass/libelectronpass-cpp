@@ -56,14 +56,20 @@ namespace electronpass {
         /**
          * @brief Loads wallet object from disk data.
          *
+         * Error codes:
+         *
+         * - 0: success
+         * - 1: could not decrypt data
+         * - 2: invalid json
+         *
          * **Note:** for now version is ignored. Will change in the future.
          *
          * @param data Data stored on disk
          * @param crypto Crypto object used for encryption
-         * @param success Set to true if successful, otherwise false
+         * @param error Error that has occurred
          * @return Wallet object
          */
-        electronpass::Wallet load(const std::string &data, const Crypto &crypto, bool &success);
+        electronpass::Wallet load(const std::string &data, const Crypto &crypto, int &error);
 
         /**
          * @brief Converts wallet to json that can be saved on disk.

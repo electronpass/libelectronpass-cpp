@@ -81,21 +81,31 @@ std::string serialization::serialize(const Wallet& wallet) {
     return Json::writeString(builder, root);
 }
 
-electronpass::Wallet serialization::load(const std::string &data, const Crypto &crypto, bool &success) {
+electronpass::Wallet serialization::load(const std::string &data, const Crypto &crypto, int &error) {
     Json::Value json;
     Json::Reader reader;
-    reader.parse(data.c_str(), json);
+    if (!reader.parse(data, json)) {
+        error = 2;
+        return Wallet();
+    }
+
+    if (json["timestamp"].empty() || json["data"].empty() || json["version"].empty()) {
+        error = 2;
+        return Wallet();
+    }
+
+    uint64_t timestamp = json["timestamp"].asUInt64();
 
     bool decrypt;
     std::string wallet_string = crypto.decrypt(json["data"].asString(), decrypt);
     if (!decrypt) {
-        success = false;
-        return Wallet();
+        error = 1;
+        return Wallet(timestamp);
     }
 
     Wallet wallet = deserialize(wallet_string);
-    wallet.timestamp = json["timestamp"].asUInt64();
-    success = true;
+    wallet.timestamp = timestamp;
+    error = 0;
     return wallet;
 }
 
@@ -104,7 +114,7 @@ std::string serialization::save(const Wallet &wallet, const Crypto &crypto, bool
     std::string data = crypto.encrypt(serialize(wallet), encrypt);
     if (!encrypt) {
         success = false;
-        return "";
+        return "{}";
     }
 
     success = true;

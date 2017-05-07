@@ -19,7 +19,9 @@ int main() {
     std::cout << saved_wallet << std::endl;
 
     // Load empty wallet
-    wallet = electronpass::serialization::load(saved_wallet, crypto, success);
+    int error;
+    wallet = electronpass::serialization::load(saved_wallet, crypto, error);
+    std::cout << error << std::endl;
 
     return 0;
 }

@@ -64,8 +64,9 @@ TEST(SerializationTest, EmptyDeserializationTest) {
 TEST(SerializationTest, LoadSaveTest) {
     electronpass::Crypto crypto("password");
     electronpass::Wallet wallet1 = test_wallet();
+    int error;
     bool success;
-    electronpass::Wallet wallet2 = electronpass::serialization::load(electronpass::serialization::save(wallet1, crypto, success), crypto, success);
+    electronpass::Wallet wallet2 = electronpass::serialization::load(electronpass::serialization::save(wallet1, crypto, success), crypto, error);
 
     EXPECT_EQ(wallet1.timestamp, wallet2.timestamp);
 
