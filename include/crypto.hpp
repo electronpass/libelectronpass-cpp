@@ -97,6 +97,10 @@ namespace electronpass {
 
         /**
          * @brief Function for decoding from Base64.
+         *
+         * If string has invalid length (not a multiple of 4), then empty string ("")
+         * is returned.
+         *
          * @param s String, which will be decoded from Base64.
          * @return Decoded string.
          */

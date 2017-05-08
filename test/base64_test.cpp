@@ -95,3 +95,12 @@ TEST(Base64Decode, Basic) {
     );
 
 }
+
+TEST(Base64Decode, InvalidBase64StringLength) {
+    // Invalid length
+    EXPECT_EQ(electronpass::Crypto::base64_decode("AB"), "");
+    EXPECT_EQ(electronpass::Crypto::base64_decode("ABC"), "");
+    EXPECT_EQ(electronpass::Crypto::base64_decode("ABCDE"), "");
+    EXPECT_EQ(electronpass::Crypto::base64_decode("ABCDEF"), "");
+    EXPECT_EQ(electronpass::Crypto::base64_decode("ABCDEFG"), "");
+}

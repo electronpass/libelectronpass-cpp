@@ -66,6 +66,9 @@ std::string electronpass::Crypto::base64_encode(const std::string& s) {
 
 
 std::string electronpass::Crypto::base64_decode(const std::string& s) {
+    // String is not correctly encoded in Base64.
+    if (s.size() % 4 != 0) return "";
+
     std::string result;
     int len = s.size();
     int i = 0, counter = 0;
