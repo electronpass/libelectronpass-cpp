@@ -109,10 +109,15 @@ std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text,
     unsigned int nonce_size = crypto_aead_chacha20poly1305_NPUBBYTES;  // 8 bytes
     unsigned char *nonce = new unsigned char[nonce_size];
 
+    if (cipher_text.length() < nonce_size) {
+        success = false;
+        return "";
+    }
+    
     for (unsigned int i = 0; i < nonce_size; ++i) nonce[i] = cipher_text[i];
 
     // Convert std::string to unsigned char array.
-    // New lenght will be smaller, because we won't copy first nonce_size bytes (8 bytes).
+    // New length will be smaller, because we won't copy first nonce_size bytes (8 bytes).
     const unsigned int cipher_text_len = cipher_text.length() - nonce_size;
     unsigned char *cipher = new unsigned char[cipher_text_len];
 
