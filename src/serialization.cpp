@@ -128,3 +128,15 @@ std::string serialization::save(const Wallet &wallet, const Crypto &crypto, int 
     builder.settings_["indentation"] = "";
     return Json::writeString(builder, json);
 }
+
+std::string serialization::csv_export(const Wallet &wallet) {
+    std::string result = "";
+    for (std::string id : wallet.get_ids()) {
+        Wallet::Item item = wallet[id];
+        result += item.name;
+        for (Wallet::Field field : item.fields) result += "," + field.name + "," + field.value;
+        result += "\n";
+    }
+
+    return result;
+}

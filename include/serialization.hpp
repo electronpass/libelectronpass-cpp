@@ -85,6 +85,13 @@ namespace electronpass {
          * @return JSON that can be saved to disk
          */
         std::string save(const Wallet &wallet, const Crypto &crypto, int &error);
+
+        /**
+         * @brief Export data to csv string.
+         * @param wallet Wallet to export.
+         * @return csv string.
+         */
+        std::string csv_export(const Wallet &wallet);
     }
 }
 
