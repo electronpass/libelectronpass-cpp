@@ -124,6 +124,7 @@ bool Wallet::add_item(const Item &item) {
     std::map<std::string, Item>::iterator it = items.find(item.get_id());
     if (it == items.end()) {
         items[item.get_id()] = item;
+        items[item.get_id()].last_edited = current_timestamp();
         return true;
     }
     update_timestamp();
@@ -133,6 +134,7 @@ bool Wallet::add_item(const Item &item) {
 void Wallet::edit_item(const std::string& id, const std::string& name, const std::vector<Field>& fields) {
     items[id].name = name;
     items[id].fields = fields;
+    items[id].last_edited = current_timestamp();
     update_timestamp();
 }
 
