@@ -4,7 +4,6 @@
 #include "serialization.hpp"
 
 electronpass::Wallet test_wallet() {
-    electronpass::Wallet wallet;
     electronpass::Wallet::Item google1("Google", "YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp", 1493189705);
     electronpass::Wallet::Field google_username("Username", "open_user", electronpass::Wallet::FieldType::USERNAME, false);
     electronpass::Wallet::Field google_password("Password", "secret_pa55", electronpass::Wallet::FieldType::PASSWORD, true);
@@ -15,9 +14,10 @@ electronpass::Wallet test_wallet() {
     electronpass::Wallet::Field google2_password("Password", "reallynotsecurepass123", electronpass::Wallet::FieldType::PASSWORD, true);
     google2.fields = {google2_email, google2_password};
 
-    wallet.add_item(google1);
-    wallet.add_item(google2);
-    wallet.timestamp = 1493189805;
+    std::map<std::string, electronpass::Wallet::Item> items;
+    items["YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp"] = google1;
+    items["epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba"] = google2;
+    electronpass::Wallet wallet(items, 1493189805);
 
     return wallet;
 }
