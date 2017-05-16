@@ -28,6 +28,12 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace electronpass;
 
+uint64_t current_timestamp() {
+    auto now = std::chrono::system_clock::now();
+    auto new_timestamp = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch());
+    return static_cast<uint64_t>(new_timestamp.count());
+}
+
 Wallet::FieldType Wallet::string_to_field_type(const std::string &field_type) {
     if (field_type == kFieldTypeUsername) return FieldType::USERNAME;
     if (field_type == kFieldTypePassword) return FieldType::PASSWORD;
@@ -52,19 +58,20 @@ std::string Wallet::field_type_to_string(FieldType field_type) {
     }
 }
 
-Wallet::Item::Item() {
+Wallet::Item::Item(uint64_t last_edited_) {
     id = Crypto::generate_uuid();
+    last_edited = last_edited_ ? last_edited_ : current_timestamp();
 }
 
-Wallet::Item::Item(const std::string &name_, std::string id_): name{name_} {
-    if (id_ == "") id = Crypto::generate_uuid();
-    else id = id_;
+Wallet::Item::Item(const std::string &name_, std::string id_, uint64_t last_edited_): name{name_} {
+    id = id_ == "" ? Crypto::generate_uuid() : id_;
+    last_edited = last_edited_ ? last_edited_ : current_timestamp();
 }
 
-Wallet::Item::Item(const std::string &name_, const std::vector<Field> &fields_, std::string id_): fields {fields_},
-                                                                                                  name{name_} {
-    if (id_ == "") id = Crypto::generate_uuid();
-    else id = id_;
+Wallet::Item::Item(const std::string &name_, const std::vector<Field> &fields_, std::string id_, uint64_t last_edited_): fields {fields_},
+                                                                                                                         name{name_} {
+    id = id_ == "" ? Crypto::generate_uuid() : id_;
+    last_edited = last_edited_ ? last_edited_ : current_timestamp();
 }
 
 std::string Wallet::Item::get_id() const {
@@ -141,9 +148,7 @@ unsigned long Wallet::size() const {
 }
 
 void Wallet::update_timestamp() {
-    auto now = std::chrono::system_clock::now();
-    auto new_timestamp = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch());
-    timestamp = static_cast<uint64_t>(new_timestamp.count());
+    timestamp = current_timestamp();
 }
 
 Wallet Wallet::merge(const Wallet &wallet1, const Wallet &wallet2) {

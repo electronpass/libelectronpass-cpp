@@ -23,6 +23,7 @@ We are using JSON because it is flexible and allows us for future extensions. Un
 {
   "items": {
     "fed8f5d6744128839ed7390f84268a78": {
+      "last_edited": 1493189705,
       "name": "Google",
       "fields": [
         {
@@ -40,6 +41,7 @@ We are using JSON because it is flexible and allows us for future extensions. Un
       ]
     },
     "f26cfe5b0596bb5077db7f7c0e19d9e5": {
+      "last_edited": 1493189650,
       "name": "Firefox",
       "fields": [
         {

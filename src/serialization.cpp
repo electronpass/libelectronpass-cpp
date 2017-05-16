@@ -32,6 +32,7 @@ Wallet serialization::deserialize(const std::string& json) {
     for (std::string id : raw_items) {
         Json::Value raw_item = root["items"][id];
         std::string name = raw_item["name"].asString();
+        uint64_t last_edited = raw_item["last_edited"].asUInt64();
 
         std::vector<Wallet::Field> fields;
         Json::Value raw_fields = raw_item["fields"];
@@ -45,7 +46,7 @@ Wallet serialization::deserialize(const std::string& json) {
             fields.push_back(field);
         }
 
-        Wallet::Item item(name, fields, id);
+        Wallet::Item item(name, fields, id, last_edited);
         items[id] = item;
     }
 
@@ -60,6 +61,7 @@ std::string serialization::serialize(const Wallet& wallet) {
     for (std::string id : ids) {
         Json::Value item;
         item["name"] = wallet[id].name;
+        item["last_edited"] = wallet[id].last_edited;
 
         std::vector<Wallet::Field> fields = wallet[id].fields;
         Json::Value json_fields;

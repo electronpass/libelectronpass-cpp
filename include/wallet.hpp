@@ -128,29 +128,48 @@ namespace electronpass {
             /// Item fields.
             std::vector<Field> fields;
 
-            /// Constructor for creating an empty item. New id will be set to the item.
-            Item();
+            /** @brief Unix timestamp set to when the item was last edited.
+             * You do not have to set last edited if you use Wallet methods for altering items.
+             */
+            uint64_t last_edited;
+
+            /**
+             * @brief Constructor for creating an empty item.
+             *
+             * New id will be set to the item.
+             *
+             * If last_edited is not set, then it will be set to current timestamp.
+             *
+             * @param last_edited_ Unix timestamp, when the item was last edited.
+             */
+            Item(uint64_t last_edited_ = 0);
 
             /**
              * @brief Constructor for creating item with name and empty fields.
              *
              * If id is not set, then random id will be generated.
              *
+             * If last_edited is not set,then it will be set to current timestamp.
+             *
              * @param id_ Item id.
              * @param name_ Display name for the item.
+             * @param last_edited_ Unix timestamp, when the item was last edited.
              */
-            Item(const std::string& name_, std::string id_ = "");
+            Item(const std::string& name_, std::string id_ = "", uint64_t last_edited_ = 0);
 
             /**
              * @brief Constructor for creating fully populated item.
              *
              * If id is not set, then random id will be generated.
              *
+             * If last_edited is not set,then it will be set to current timestamp.
+             *
              * @param id_ Item id.
              * @param name_ Display name for the item.
              * @param fields_ Fields in the item. For more info about fields read Wallet::Field.
+             * @param last_edited_ Unix timestamp, when the item was last edited.
              */
-            Item(const std::string& name_, const std::vector<Field>& fields_, std::string id_ = "");
+            Item(const std::string& name_, const std::vector<Field>& fields_, std::string id_ = "", uint64_t last_edited_ = 0);
 
             /// Display name for the item.
             std::string name;
