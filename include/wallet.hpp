@@ -22,6 +22,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <string>
 #include <chrono>
+#include <set>
 
 #include "crypto.hpp"
 

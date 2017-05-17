@@ -154,5 +154,30 @@ void Wallet::update_timestamp() {
 }
 
 Wallet Wallet::merge(const Wallet &wallet1, const Wallet &wallet2) {
-    return wallet1.timestamp > wallet2.timestamp ? wallet1 : wallet2;
+    std::vector<std::string> wallet1_ids = wallet1.get_ids();
+    std::vector<std::string> wallet2_ids = wallet2.get_ids();
+    std::set<std::string> newer_wallet, older_wallet;
+    if (wallet1.timestamp >= wallet2.timestamp) {
+        newer_wallet = std::set<std::string>(wallet1_ids.begin(), wallet1_ids.end());
+        older_wallet = std::set<std::string>(wallet2_ids.begin(), wallet2_ids.end());
+    } else {
+        newer_wallet = std::set<std::string>(wallet2_ids.begin(), wallet2_ids.end());
+        older_wallet = std::set<std::string>(wallet1_ids.begin(), wallet1_ids.end());
+    }
+
+    std::map<std::string, Wallet::Item> items;
+
+    for (std::set<std::string>::iterator it = newer_wallet.begin(); it != newer_wallet.end(); ++it) {
+        if (older_wallet.find(*it) == older_wallet.end()) {
+            items[*it] = wallet1[*it];
+            continue;
+        }
+
+        Wallet::Item item1 = wallet1[*it];
+        Wallet::Item item2 = wallet2[*it];
+        items[*it] = item1.last_edited >= item2.last_edited ? item1 : item2;
+    }
+
+    uint64_t timestamp = wallet1.timestamp > wallet2.timestamp ? wallet1.timestamp : wallet2.timestamp;
+    return Wallet(items, timestamp);
 }
