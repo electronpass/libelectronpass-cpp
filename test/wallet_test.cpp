@@ -51,6 +51,10 @@ TEST(WalletTest, Merge) {
     std::vector<std::string> ids = {"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp"};
     EXPECT_EQ(electronpass::Wallet::merge(wallet1, wallet2).get_ids(), ids);
 
+    wallet2 = electronpass::Wallet(items, 1493189815);
+    wallet2.add_item(electronpass::Wallet::Item());
+    EXPECT_EQ(electronpass::Wallet::merge(wallet1, wallet2).get_ids().size(), static_cast<unsigned int>(3));
+
     items["YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp"].last_edited -= 20;
     wallet2 = electronpass::Wallet(items, 1493189815);
     EXPECT_EQ(electronpass::Wallet::merge(wallet1, wallet2)["YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp"].last_edited,

@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
 #include "wallet.hpp"
 
 #define kFieldTypeUsername "username"
@@ -169,7 +170,8 @@ Wallet Wallet::merge(const Wallet &wallet1, const Wallet &wallet2) {
 
     for (std::set<std::string>::iterator it = newer_wallet.begin(); it != newer_wallet.end(); ++it) {
         if (older_wallet.find(*it) == older_wallet.end()) {
-            items[*it] = wallet1[*it];
+            electronpass::Wallet wallet = wallet1.timestamp >= wallet2.timestamp ? wallet1 : wallet2;
+            items[*it] = wallet[*it];
             continue;
         }
 
