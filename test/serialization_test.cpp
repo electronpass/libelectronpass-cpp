@@ -92,7 +92,7 @@ TEST(SerializationTest, LoadSaveTest) {
 }
 
 TEST(SerializationTest, InvalidJSONTest) {
-    std::string json = "this is invalid json.";
+    std::string json = "\"\"";
     electronpass::Crypto crypto("");
     int error;
     electronpass::Wallet wallet = electronpass::serialization::load(json, crypto, error);

@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
 #include "serialization.hpp"
 
 #define kWalletVersion 0
@@ -91,7 +92,12 @@ electronpass::Wallet serialization::load(const std::string &data, const Crypto &
         return Wallet();
     }
 
-    if (json["timestamp"].empty() || json["data"].empty() || json["version"].empty()) {
+    try {
+        if (json["timestamp"].empty() || json["data"].empty() || json["version"].empty()) {
+            error = 2;
+            return Wallet();
+        }
+    } catch (Json::LogicError &e) {
         error = 2;
         return Wallet();
     }

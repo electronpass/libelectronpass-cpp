@@ -20,6 +20,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <string>
 #include <vector>
+#include <exception>
 
 #include "json/json.h"
 #include "json/json-forwards.h"
