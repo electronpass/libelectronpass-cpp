@@ -119,6 +119,7 @@ std::string electronpass::passwords::password_strength_category_to_str(strength_
             return "very strong";
     }
     assert(false && "No such enum state!");
+    return 0;
 }
 
 double electronpass::passwords::password_strength(std::string password) {
