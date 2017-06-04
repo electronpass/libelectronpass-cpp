@@ -10,5 +10,9 @@ set(SOURCE_FILES
 add_library(electronpass SHARED ${SOURCE_FILES})
 target_link_libraries(electronpass sodium)
 
-install(TARGETS electronpass DESTINATION lib)# /usr/lib)
-install(DIRECTORY ../include/ DESTINATION include/electronpass)#/usr/include/electronpass)
+install(TARGETS electronpass LIBRARY DESTINATION "lib"
+                      RUNTIME DESTINATION "bin"
+                      ARCHIVE DESTINATION "lib"
+                      COMPONENT library)
+
+install(DIRECTORY ../include/ DESTINATION include/electronpass)
