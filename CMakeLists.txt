@@ -22,3 +22,6 @@ add_custom_target(check
 )
 
 install(DIRECTORY jsoncpp/ DESTINATION include/electronpass)#/usr/include/electronpass/)
+
+
+add_custom_target(uninstall COMMAND xargs rm < install_manifest.txt)
