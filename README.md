@@ -1,5 +1,5 @@
 # libelectronpass
-[![Build Status](https://travis-ci.org/electronpass/libelectronpass.svg?branch=master)](https://travis-ci.org/electronpass/libelectronpass)
+[![Build Status](https://travis-ci.org/electronpass/libelectronpass.svg?branch=release)](https://travis-ci.org/electronpass/libelectronpass)
 
 Core C++ library for ElectronPass.
 
@@ -41,7 +41,7 @@ Simple usage examples are located in ```examples/``` folder. To build examples r
     make examples
 
 ## License
-Code in this project is licensed under [GNU LGPLv3 license](https://github.com/electronpass/libelectronpass/blob/master/LICENSE.LESSER). Some third party files are subjective to their respective license.
+Code in this project is licensed under [GNU LGPLv3 license](https://github.com/electronpass/libelectronpass/blob/release/LICENSE.LESSER). Some third party files are subjective to their respective license.
 
 ### JsonCpp
 [JsonCpp](https://github.com/open-source-parsers/jsoncpp) is licensed under the MIT license. Used files are:
