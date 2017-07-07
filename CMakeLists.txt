@@ -8,8 +8,16 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wold-style-cast -pedantic")
 
-find_package(sodium REQUIRED)
-include_directories(include jsoncpp ${sodium_INCLUDE_DIR})
+#find sodium lib either for android or normal builds
+if(DEFINED ANDROID_ABI)
+    set(SODIUM_PATH ${PROJECT_SOURCE_DIR}/../libsodium/libsodium-android-${ANDROID_ABI}/lib/libsodium.a)
+    add_library(sodium STATIC IMPORTED)
+    set_property(TARGET sodium PROPERTY IMPORTED_LOCATION ${SODIUM_PATH})
+    include_directories(include jsoncpp ${PROJECT_SOURCE_DIR}/../libsodium/libsodium-android-${ANDROID_ABI}/include)
+else()
+    find_package(sodium REQUIRED)
+    include_directories(include jsoncpp ${sodium_INCLUDE_DIR})
+endif()
 
 add_subdirectory(src)
 add_subdirectory(test EXCLUDE_FROM_ALL)
