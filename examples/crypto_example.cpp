@@ -5,7 +5,7 @@
 
 int main() {
     // Output UUID
-    std::cout << electronpass::Crypto::generate_uuid() << std::endl;
+    std::cout << "Example UUID: " << electronpass::Crypto::generate_uuid() << std::endl;
 
     bool success;
     std::string message, password, encrypted, decrypted;

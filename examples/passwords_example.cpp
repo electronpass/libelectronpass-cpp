@@ -7,7 +7,6 @@ const std::vector<std::string> sample_passwords = {
         "neki", "lineageosas", "lineageosas101",
         "lineageosasasd", "asdfasdfasdf101",
         "danesjelepdan123", "danesjelepdanasd"
-
 };
 
 int main() {
@@ -33,5 +32,4 @@ int main() {
         std::cout << pass << " = " << password_strength(pass) << " " << human_readable_password_strength_category(pass)
                   << std::endl;
     }
-    return 0;
 }

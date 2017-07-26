@@ -35,14 +35,14 @@ int true_random_int(int min, int max) {
 
 // Rewrites string without n-th char and returns it.
 std::string rm_char(std::string a, int n) {
-    std::string result = "";
+    std::string result;
     for (int i = 0; i < static_cast<int>(a.size()); i++) {
         if (i != n) result += a[i];
     }
     return result;
 }
 
-// counts number of occurrences of string b in string a
+// Counts number of occurrences of string b in string a
 int number_of_occurrences(std::string a, std::string b) {
     int occurrences = 0;
     std::string::size_type start = 0;
@@ -56,7 +56,7 @@ int number_of_occurrences(std::string a, std::string b) {
 
 std::string electronpass::passwords::generate_random_pass(int len, int digits, int symbols, int uppercase) {
     // take random characters from initial ones
-    std::string dataset = "";
+    std::string dataset;
     for (int i = 0; i < digits && static_cast<int>(dataset.size()) < len; ++i) {
         dataset += digits_list[true_random_int(0, digits_list.size() - 1)];
     }
@@ -71,11 +71,11 @@ std::string electronpass::passwords::generate_random_pass(int len, int digits, i
     }
 
     // shuffle dataset
-    std::string result = "";
+    std::string result;
     while (static_cast<int>(result.size()) < len) {
         if (dataset.size() > 1) {
             // select random char and move it into result
-            int i = true_random_int(0, dataset.size() - 1);
+            int i = true_random_int(0, static_cast<int>(dataset.size() - 1));
             result += dataset[i];
             dataset = rm_char(dataset, i);
         } else {
@@ -89,9 +89,9 @@ std::string electronpass::passwords::generate_random_pass(int len, int digits, i
 
 std::string electronpass::passwords::generate_random_pass(int len) {
     std::string dataset = letters_list + digits_list + special_chars_list + uppercase_letters_list;
-    std::string result = "";
+    std::string result;
     for (int i = 0; i < len; i++) {
-        result += dataset[true_random_int(0, dataset.size() - 1)];
+        result += dataset[true_random_int(0, static_cast<int>(dataset.size() - 1))];
     }
     return result;
 }
@@ -99,10 +99,10 @@ std::string electronpass::passwords::generate_random_pass(int len) {
 
 electronpass::passwords::strength_category electronpass::passwords::double_to_password_strength(double d) {
     if (d < 0.002) return strength_category::TERRIBLE;
-    else if (d < 0.005) return strength_category::BAD;
-    else if (d < 0.05) return strength_category::MODERATE;
-    else if (d < 0.7) return strength_category::GOOD;
-    else return strength_category::VERY_STRONG;
+    if (d < 0.005) return strength_category::BAD;
+    if (d < 0.05) return strength_category::MODERATE;
+    if (d < 0.7) return strength_category::GOOD;
+    return strength_category::VERY_STRONG;
 }
 
 std::string electronpass::passwords::password_strength_category_to_str(strength_category e) {
@@ -118,8 +118,6 @@ std::string electronpass::passwords::password_strength_category_to_str(strength_
         case strength_category::VERY_STRONG:
             return "very strong";
     }
-    assert(false && "No such enum state!");
-    return 0;
 }
 
 double electronpass::passwords::password_strength(std::string password) {
@@ -153,7 +151,7 @@ double electronpass::passwords::password_strength(std::string password) {
     const double avg_symbols_share = static_cast<double>(special_chars_list.size()) / all_possible_chars;
 
     double digits_share = 0, lowercase_share = 0, uppercase_share = 0, symbols_share = 0;
-    if (password.size() > 0) {
+    if (!password.empty()) {
         //actual shares
         digits_share = static_cast<double>(digits) / static_cast<double>(password.size());
         lowercase_share = static_cast<double>(lowercase) / static_cast<double>(password.size());
@@ -173,7 +171,7 @@ double electronpass::passwords::password_strength(std::string password) {
                          max_current_len * 1e-8 * std::abs(avg_symbols_share - symbols_share);
 
     //for each "bad phrase" in password, divide result with 2
-    for (std::string phrase : bad_phrases) {
+    for (const std::string &phrase : bad_phrases) {
         result /= std::pow(0.5, number_of_occurrences(password, phrase));
     }
 

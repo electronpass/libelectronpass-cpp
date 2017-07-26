@@ -25,12 +25,12 @@ using namespace electronpass;
 Wallet serialization::deserialize(const std::string& json) {
     Json::Value root;
     Json::Reader reader;
-    reader.parse(json.c_str(), root);
+    reader.parse(json, root);
 
     std::map<std::string, Wallet::Item> items;
 
     Json::Value::Members raw_items = root["items"].getMemberNames();
-    for (std::string id : raw_items) {
+    for (const std::string &id : raw_items) {
         Json::Value raw_item = root["items"][id];
         std::string name = raw_item["name"].asString();
         uint64_t last_edited = raw_item["last_edited"].asUInt64();
@@ -59,7 +59,7 @@ std::string serialization::serialize(const Wallet& wallet) {
     root["items"] = Json::Value();
 
     std::vector<std::string> ids = wallet.get_ids();
-    for (std::string id : ids) {
+    for (const std::string &id : ids) {
         Json::Value item;
         item["name"] = wallet[id].name;
         item["last_edited"] = wallet[id].last_edited;
@@ -138,8 +138,8 @@ std::string serialization::save(const Wallet &wallet, const Crypto &crypto, int 
 }
 
 std::string serialization::csv_export(const Wallet &wallet) {
-    std::string result = "";
-    for (std::string id : wallet.get_ids()) {
+    std::string result;
+    for (const std::string &id : wallet.get_ids()) {
         Wallet::Item item = wallet[id];
         result += item.name;
         for (Wallet::Field field : item.fields) result += "," + field.name + "," + field.value;

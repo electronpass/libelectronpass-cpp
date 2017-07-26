@@ -51,8 +51,7 @@ TEST(PasswordsTest, PassGenerationTest) {
 
 TEST(PasswordsTest, PassEvaluationTest) {
     // test if passwords are evaluated the way we want
-    for (int i = 0; i < static_cast<int>(sample_passwords.size()); i++) {
-        std::tuple<std::string, electronpass::passwords::strength_category> pass = sample_passwords[i];
+    for (auto pass : sample_passwords) {
         EXPECT_EQ(electronpass::passwords::password_strength_category(std::get<0>(pass)), std::get<1>(pass));
     }
 

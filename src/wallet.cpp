@@ -64,7 +64,7 @@ Wallet::Item::Item(uint64_t last_edited_) {
 }
 
 Wallet::Item::Item(const std::string &name_, std::string id_, uint64_t last_edited_): name{name_} {
-    id = id_ == "" ? Crypto::generate_uuid() : id_;
+    id = id_.empty() ? Crypto::generate_uuid() : id_;
     last_edited = last_edited_ ? last_edited_ : current_timestamp();
 }
 
@@ -108,8 +108,8 @@ Wallet::Wallet(const std::map<std::string, Item> &items_, uint64_t timestamp_): 
 std::vector<std::string> Wallet::get_ids() const {
     std::vector<std::string> ids(items.size());
     int i = 0;
-    for (std::map<std::string, Item>::const_iterator it = items.begin(); it != items.end(); ++it) {
-        ids[i] = it->first;
+    for (const auto &item : items) {
+        ids[i] = item.first;
         ++i;
     }
 
@@ -121,7 +121,7 @@ Wallet::Item Wallet::operator[](const std::string& id) const {
 }
 
 bool Wallet::add_item(const Item &item) {
-    std::map<std::string, Item>::iterator it = items.find(item.get_id());
+    auto it = items.find(item.get_id());
     if (it == items.end()) {
         items[item.get_id()] = item;
         items[item.get_id()].last_edited = current_timestamp();
@@ -167,16 +167,16 @@ Wallet Wallet::merge(const Wallet &wallet1, const Wallet &wallet2) {
 
     std::map<std::string, Wallet::Item> items;
 
-    for (std::set<std::string>::iterator it = newer_wallet.begin(); it != newer_wallet.end(); ++it) {
-        if (older_wallet.find(*it) == older_wallet.end()) {
+    for (const auto &item : newer_wallet) {
+        if (older_wallet.find(item) == older_wallet.end()) {
             electronpass::Wallet wallet = wallet1.timestamp >= wallet2.timestamp ? wallet1 : wallet2;
-            items[*it] = wallet[*it];
+            items[item] = wallet[item];
             continue;
         }
 
-        Wallet::Item item1 = wallet1[*it];
-        Wallet::Item item2 = wallet2[*it];
-        items[*it] = item1.last_edited >= item2.last_edited ? item1 : item2;
+        Wallet::Item item1 = wallet1[item];
+        Wallet::Item item2 = wallet2[item];
+        items[item] = item1.last_edited >= item2.last_edited ? item1 : item2;
     }
 
     uint64_t timestamp = wallet1.timestamp > wallet2.timestamp ? wallet1.timestamp : wallet2.timestamp;

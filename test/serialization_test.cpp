@@ -24,7 +24,7 @@ electronpass::Wallet test_wallet() {
 
 TEST(SerializationTest, SerializationTest) {
     std::string json = electronpass::serialization::serialize(test_wallet());
-    std::string json_string = "{\"items\":{\"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp\":{\"fields\":[{\"name\":\"Username\",\"sensitive\":false,\"type\":\"username\",\"value\":\"open_user\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"secret_pa55\"}],\"last_edited\":1493189705,\"name\":\"Google\"},\"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba\":{\"fields\":[{\"name\":\"E-mail\",\"sensitive\":false,\"type\":\"email\",\"value\":\"electron.pass@mail.com\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"reallynotsecurepass123\"}],\"last_edited\":1493189650,\"name\":\"Google\"}}}";
+    std::string json_string = R"({"items":{"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp":{"fields":[{"name":"Username","sensitive":false,"type":"username","value":"open_user"},{"name":"Password","sensitive":true,"type":"password","value":"secret_pa55"}],"last_edited":1493189705,"name":"Google"},"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba":{"fields":[{"name":"E-mail","sensitive":false,"type":"email","value":"electron.pass@mail.com"},{"name":"Password","sensitive":true,"type":"password","value":"reallynotsecurepass123"}],"last_edited":1493189650,"name":"Google"}}})";
     EXPECT_EQ(json, json_string);
 }
 
@@ -34,7 +34,7 @@ TEST(SerializationTest, EmptySerializationTest) {
 }
 
 TEST(SerializationTest, DeserializationTest) {
-    std::string json_string = "{\"items\":{\"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp\":{\"fields\":[{\"name\":\"Username\",\"sensitive\":false,\"type\":\"username\",\"value\":\"open_user\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"secret_pa55\"}],\"last_edited\":1493189705,\"name\":\"Google\"},\"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba\":{\"fields\":[{\"name\":\"E-mail\",\"sensitive\":false,\"type\":\"email\",\"value\":\"electron.pass@mail.com\"},{\"name\":\"Password\",\"sensitive\":true,\"type\":\"password\",\"value\":\"reallynotsecurepass123\"}],\"last_edited\":1493189650,\"name\":\"Google\"}}}";
+    std::string json_string = R"({"items":{"YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp":{"fields":[{"name":"Username","sensitive":false,"type":"username","value":"open_user"},{"name":"Password","sensitive":true,"type":"password","value":"secret_pa55"}],"last_edited":1493189705,"name":"Google"},"epW6aIyR6eBLmyQkgYG/KIDKWr0w0vba":{"fields":[{"name":"E-mail","sensitive":false,"type":"email","value":"electron.pass@mail.com"},{"name":"Password","sensitive":true,"type":"password","value":"reallynotsecurepass123"}],"last_edited":1493189650,"name":"Google"}}})";
     electronpass::Wallet wallet = electronpass::serialization::deserialize(json_string);
 
     std::vector<std::string> ids = wallet.get_ids();
@@ -57,7 +57,7 @@ TEST(SerializationTest, DeserializationTest) {
 }
 
 TEST(SerializationTest, EmptyDeserializationTest) {
-    std::string json = "{\"items\":null,\"timestamp\":1}";
+    std::string json = R"({"items":null,"timestamp":1})";
     electronpass::Wallet wallet = electronpass::serialization::deserialize(json);
     EXPECT_EQ(wallet.size(), static_cast<unsigned int>(0));
 }
