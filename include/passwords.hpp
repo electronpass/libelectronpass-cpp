@@ -89,21 +89,21 @@ namespace electronpass {
          * @details @f[ min(a*10^{11}/2^{52}, 1) @f]
          * @return Double between 0 and 1 representing strength (0 is terribly bad, 1 is good).
          */
-        double password_strength(std::string password);
+        double password_strength(const std::string& password);
 
         /**
          * @brief Calculates password strength and casts it into PASSWORD_STRENGTH enum.
          * @param password Password to evaluate.
          * @return strength_category enum.
          */
-        strength_category password_strength_category(std::string password);
+        strength_category password_strength_category(const std::string& password);
 
         /**
          * @brief Returns human-readable strength category using common password_strength method.
          * @param password Password to evaluate.
          * @return Human-readable string.
          */
-        std::string human_readable_password_strength_category(std::string password);
+        std::string human_readable_password_strength_category(const std::string& password);
 
         /**
          * @brief Casts double from password_strength to enum strength_category.

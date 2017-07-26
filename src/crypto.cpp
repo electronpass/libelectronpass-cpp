@@ -22,7 +22,7 @@ electronpass::Crypto::Crypto(std::string password) {
     // Sodium init returns 0 if everything is ok and 1 if sodium was already initialized.
     if (sodium_init() != -1) part_success = true;
 
-    unsigned int password_len = password.length();
+    unsigned int password_len = static_cast<unsigned int>(password.length());
     char *password_char = new char[password_len];
 
     for (unsigned int i = 0; i < password_len; ++i) password_char[i] = password[i];

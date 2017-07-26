@@ -21,7 +21,6 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include <algorithm>
 #include <set>
-#include <cassert>
 
 // Seeds and obtains random int between min and max using mt19937 algorithm.
 int true_random_int(int min, int max) {
@@ -120,7 +119,7 @@ std::string electronpass::passwords::password_strength_category_to_str(strength_
     }
 }
 
-double electronpass::passwords::password_strength(std::string password) {
+double electronpass::passwords::password_strength(const std::string& password) {
     std::set<char> all_chars = {};
     int digits = 0;
     int lowercase = 0;
@@ -180,10 +179,10 @@ double electronpass::passwords::password_strength(std::string password) {
 }
 
 
-electronpass::passwords::strength_category electronpass::passwords::password_strength_category(std::string password) {
+electronpass::passwords::strength_category electronpass::passwords::password_strength_category(const std::string& password) {
     return double_to_password_strength(password_strength(password));
 }
 
-std::string electronpass::passwords::human_readable_password_strength_category(std::string password) {
+std::string electronpass::passwords::human_readable_password_strength_category(const std::string& password) {
     return password_strength_category_to_str(password_strength_category(password));
 }
