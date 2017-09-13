@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "crypto.hpp"
+#include "electronpass/crypto.hpp"
 #include <iostream>
 
 static bool is_base64(char c) {

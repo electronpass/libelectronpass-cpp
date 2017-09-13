@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "crypto.hpp"
+#include "electronpass/crypto.hpp"
 
 electronpass::Crypto::Crypto(std::string password) {
     bool part_success = false;
