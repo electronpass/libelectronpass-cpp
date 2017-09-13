@@ -1,5 +1,5 @@
 #include <iostream>
-#include "passwords.hpp"
+#include "electronpass/passwords.hpp"
 
 using namespace electronpass::passwords;
 

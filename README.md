@@ -1,29 +1,35 @@
 # libelectronpass
 [![Build Status](https://travis-ci.org/electronpass/libelectronpass.svg?branch=release)](https://travis-ci.org/electronpass/libelectronpass)
 
-Core C++ library for ElectronPass.
+Backend for electronpass-desktop that can work with the wallet format writen in c++.
 
 ## Dependencies
 
 - [libsodium](https://libsodium.org) - A modern and easy-to-use crypto library
 - [jsoncpp v1.8.0](https://github.com/open-source-parsers/jsoncpp) - Already included in source code
 - [gtest](https://github.com/google/googletest) - Required for building tests. Already included in source code
+- [doxygen](http://www.stack.nl/~dimitri/doxygen/) - Required for building documentation
 
 ## Building
+CMake configuration is used to create documentation and run tests.
+
+The following will build examples and tests
 
     mkdir build; cd build
     cmake ..
     make -j8
 
-To run tests:
+## Tests
+You can run the tests with
 
-    make check
+```make check```
 
-## Installing
+You can also compile and run the tests with
 
-    sudo make install
-
-Note: if the library doesn't link on linux you should run ```sudo ldconfig /usr/local/lib```.
+```
+make tests
+./bin/tests
+```
 
 ## Documentation
 Documentation is generated using doxygen:
@@ -36,7 +42,7 @@ You can also use make to generate documentation with:
     make docs
 
 ## Examples
-Simple usage examples are located in ```examples/``` folder. To build examples run from ```build/``` folder:
+Simple usage examples are located in ```examples/``` folder. To build all examples run from ```build/``` folder:
 
     make examples
 

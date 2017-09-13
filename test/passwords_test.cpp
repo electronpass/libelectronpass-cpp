@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <tuple>
 
-#include "passwords.hpp"
+#include "electronpass/passwords.hpp"
 
 
 // passwords to test evaluation against

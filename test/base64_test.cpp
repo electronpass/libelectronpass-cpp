@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "crypto.hpp"
+#include "electronpass/crypto.hpp"
 
 
 TEST(Base64Encode, Basic) {

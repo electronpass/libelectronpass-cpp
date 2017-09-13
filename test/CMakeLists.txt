@@ -9,5 +9,5 @@ set(TEST_FILES
     wallet_test.cpp
 )
 
-add_executable(tests ${TEST_FILES})
-target_link_libraries(tests electronpass gtest gtest_main)
+add_executable(tests ${SRC} ${TEST_FILES})
+target_link_libraries(tests sodium gtest gtest_main)

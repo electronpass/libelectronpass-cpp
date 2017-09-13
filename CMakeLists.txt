@@ -11,17 +11,19 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wold-style-cas
 find_package(sodium REQUIRED)
 include_directories(include jsoncpp ${sodium_INCLUDE_DIR})
 
-add_subdirectory(src)
-add_subdirectory(test EXCLUDE_FROM_ALL)
-add_subdirectory(examples EXCLUDE_FROM_ALL)
+set(SRC
+        ${PROJECT_SOURCE_DIR}/src/base64.cpp
+        ${PROJECT_SOURCE_DIR}/src/crypto.cpp
+        ${PROJECT_SOURCE_DIR}/src/jsoncpp.cpp
+        ${PROJECT_SOURCE_DIR}/src/passwords.cpp
+        ${PROJECT_SOURCE_DIR}/src/serialization.cpp
+        ${PROJECT_SOURCE_DIR}/src/wallet.cpp)
+
+add_subdirectory(test)
+add_subdirectory(examples)
 
 add_custom_target(docs COMMAND doxygen docs/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 add_custom_target(check
     COMMAND make tests
     COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/tests
 )
-
-install(DIRECTORY jsoncpp/ DESTINATION include/electronpass)#/usr/include/electronpass/)
-
-
-add_custom_target(uninstall COMMAND xargs rm < install_manifest.txt)

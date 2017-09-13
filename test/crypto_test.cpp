@@ -5,7 +5,7 @@
 #include <set>
 
 
-#include "crypto.hpp"
+#include "electronpass/crypto.hpp"
 
 std::string random_string(int len) {
     std::string out(len, ' ');

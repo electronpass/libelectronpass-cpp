@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "serialization.hpp"
+#include "electronpass/serialization.hpp"
 
 int main() {
     // Serializing wallet:
