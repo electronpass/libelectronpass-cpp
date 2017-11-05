@@ -1,5 +1,5 @@
 # libelectronpass
-[![Build Status](https://travis-ci.org/electronpass/libelectronpass.svg?branch=release)](https://travis-ci.org/electronpass/libelectronpass)
+[![Build Status](https://travis-ci.org/electronpass/libelectronpass-cpp.svg?branch=develop)](https://travis-ci.org/electronpass/libelectronpass)
 
 Backend for electronpass-desktop that can work with the wallet format writen in c++.
 
