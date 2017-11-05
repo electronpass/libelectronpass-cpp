@@ -11,7 +11,7 @@ Backend for electronpass-desktop that can work with the wallet format writen in 
 - [doxygen](http://www.stack.nl/~dimitri/doxygen/) - Required for building documentation
 
 ## Building
-Before building you should download and build the Crypto++ library. Currently used version is ```5.6.5```. We link crypto++ as a static library. You should put the header files for crypto++ in ```cryptopp/cryptopp``` and the static library itself in ```cryptopp/libcryptopp.a```. For Unix/Linux systems there is a script provided ```install_cryptopp.sh```.
+Before building you should download and build the Crypto++ library. Currently used version is ```5.6.5```. We link crypto++ as a static library. You should put the header files for crypto++ in ```cryptopp/cryptopp``` and the static library itself in ```cryptopp/libcryptopp.a```. For Unix/Linux systems there is a script provided ```install-cryptopp.sh```.
 
 CMake configuration is used to create documentation and run tests.
 
