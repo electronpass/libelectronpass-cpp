@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "electronpass/wallet.hpp"
+#include "wallet.hpp"
 
 TEST(WalletTest, ItemInit) {
     electronpass::Wallet::Item item;

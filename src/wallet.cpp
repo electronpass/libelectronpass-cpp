@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "electronpass/wallet.hpp"
+#include "wallet.hpp"
 
 #define kFieldTypeUsername "username"
 #define kFieldTypePassword "password"

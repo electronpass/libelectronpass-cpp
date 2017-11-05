@@ -1,6 +1,7 @@
-#include "electronpass/crypto.hpp"
+#include "crypto.hpp"
 #include <iostream>
-#include <string>
+#include <fstream>
+#include <sstream>
 #include <cassert>
 
 int main() {
@@ -17,7 +18,6 @@ int main() {
     getline(std::cin, password);
 
     electronpass::Crypto crypto(password);
-    assert(crypto.check());  // Checks if sodium init was successful.
 
     encrypted = crypto.encrypt(message, success);
     assert(success);
@@ -29,7 +29,6 @@ int main() {
         getline(std::cin, password);
 
         electronpass::Crypto new_crypto(password);
-        assert(crypto.check());
 
         decrypted = new_crypto.decrypt(encrypted, success);
         if (success) std::cout << "Decrypted message: " << decrypted << '\n';

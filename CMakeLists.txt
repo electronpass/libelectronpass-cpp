@@ -6,19 +6,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wold-style-cast -pedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -pedantic")
 
-find_package(sodium REQUIRED)
-include_directories(include jsoncpp ${sodium_INCLUDE_DIR})
+include_directories(include jsoncpp cryptopp)
 
-set(SRC
-        ${PROJECT_SOURCE_DIR}/src/base64.cpp
-        ${PROJECT_SOURCE_DIR}/src/crypto.cpp
-        ${PROJECT_SOURCE_DIR}/src/jsoncpp.cpp
-        ${PROJECT_SOURCE_DIR}/src/passwords.cpp
-        ${PROJECT_SOURCE_DIR}/src/serialization.cpp
-        ${PROJECT_SOURCE_DIR}/src/wallet.cpp)
-
+add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(examples)
 

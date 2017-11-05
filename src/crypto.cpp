@@ -15,155 +15,136 @@ You should have received a copy of the GNU Lesser General Public License
 along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "electronpass/crypto.hpp"
+#include "crypto.hpp"
 
 electronpass::Crypto::Crypto(std::string password) {
-    bool part_success = false;
-    // Sodium init returns 0 if everything is ok and 1 if sodium was already initialized.
-    if (sodium_init() != -1) part_success = true;
-
-    unsigned int password_len = static_cast<unsigned int>(password.length());
-    char *password_char = new char[password_len];
-
-    for (unsigned int i = 0; i < password_len; ++i) password_char[i] = password[i];
-
-    part_success &= generate_key(password_char, password_len);
-    sodium_success = part_success;
-
-    delete[] password_char;
+    CryptoPP::SHA256 sha256;
+    CryptoPP::StringSource string_source(password + KEY_SALT, true,
+                                         new CryptoPP::HashFilter(sha256,
+                                                                  new CryptoPP::ArraySink(key,
+                                                                                          KEY_SIZE)));
 }
 
+std::string electronpass::Crypto::encrypt(const std::string &plain_text, bool &success) const {
+    CryptoPP::AutoSeededRandomPool random_pool;
+    byte iv[AES_BLOCKSIZE];
+    random_pool.GenerateBlock(iv, sizeof(iv));
 
-bool electronpass::Crypto::generate_key(const char* password, unsigned int password_len) {
-    // Generates 32 bytes key for encryption.
-    // Salt is a constant, but we are generating a random nonce for every encrypton.
-    return crypto_pwhash_scryptsalsa208sha256(key, sizeof key, password, password_len, CRYPTO_SALT,
-                                              crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE,
-                                              crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE) == 0;
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption encryption;
+    encryption.SetKeyWithIV(key, static_cast<size_t >(KEY_SIZE), iv);
+
+    unsigned long encrypted_size = (plain_text.size() / AES_BLOCKSIZE + 1) * AES_BLOCKSIZE;
+    auto encrypted_bytes = new byte[encrypted_size];  // Can't allocate on stack because of the standard
+
+    CryptoPP::StringSource source(plain_text, true,
+                                  new CryptoPP::StreamTransformationFilter(encryption,
+                                                                           new CryptoPP::ArraySink(encrypted_bytes,
+                                                                                                   encrypted_size),
+                                                                           CryptoPP::StreamTransformationFilter::PKCS_PADDING));
+    CryptoPP::SHA256 sha256;
+
+    CryptoPP::HashFilter hash_filter(sha256);
+    hash_filter.Put(encrypted_bytes, encrypted_size);
+    hash_filter.Put(key, static_cast<size_t >(KEY_SIZE));
+    hash_filter.MessageEnd();
+
+    byte signature[CryptoPP::SHA256::DIGESTSIZE];
+    hash_filter.Get(signature, static_cast<size_t >(CryptoPP::SHA256::DIGESTSIZE));
+
+    CryptoPP::Base64Encoder encoder(nullptr, false);
+    encoder.Put(encrypted_bytes, encrypted_size);
+    encoder.Put(signature, static_cast<size_t >(CryptoPP::SHA256::DIGESTSIZE));
+    encoder.Put(iv, static_cast<size_t >(AES_BLOCKSIZE));
+    encoder.MessageEnd();
+
+    unsigned long encrypted_message_size = encoder.MaxRetrievable();
+    std::string encrypted_message;
+    encrypted_message.resize(encrypted_message_size);
+    encoder.Get((byte *) encrypted_message.data(), encrypted_message_size);
+
+    delete[] encrypted_bytes;
+
+    success = true;
+    return encrypted_message;
 }
 
-std::string electronpass::Crypto::encrypt(const std::string& plain_text, bool& success) const {
-    if (!check()) {
+std::string electronpass::Crypto::decrypt(const std::string &base64_cipher_text, bool &success) const {
+    CryptoPP::Base64Decoder decoder;
+    decoder.Put((byte *) base64_cipher_text.data(), base64_cipher_text.size());
+    decoder.MessageEnd();
+
+    unsigned long message_byte_size = decoder.MaxRetrievable();
+    auto message_bytes = new byte[message_byte_size];
+    decoder.Get(message_bytes, message_byte_size);
+
+    unsigned long iv_beginning = message_byte_size - AES_BLOCKSIZE;
+    unsigned long signature_beginning = message_byte_size - AES_BLOCKSIZE - CryptoPP::SHA256::DIGESTSIZE;
+
+    byte iv[AES_BLOCKSIZE];
+    for (unsigned long i = iv_beginning; i < iv_beginning + AES_BLOCKSIZE; ++i) {
+        iv[i - iv_beginning] = message_bytes[i];
+    }
+
+    byte signature[CryptoPP::SHA256::DIGESTSIZE];
+    for (unsigned long i = signature_beginning; i < signature_beginning + CryptoPP::SHA256::DIGESTSIZE; ++i) {
+        signature[i - signature_beginning] = message_bytes[i];
+    }
+
+    unsigned long encrypted_bytes_size = signature_beginning;
+    auto encrypted_bytes = new byte[encrypted_bytes_size];
+    for (unsigned long i = 0; i < signature_beginning; ++i) encrypted_bytes[i] = message_bytes[i];
+
+    byte generated_signature[CryptoPP::SHA256::DIGESTSIZE];
+
+    CryptoPP::SHA256 sha256;
+    CryptoPP::HashFilter hash_filter(sha256);
+    hash_filter.Put(encrypted_bytes, encrypted_bytes_size);
+    hash_filter.Put(key, static_cast<size_t >(KEY_SIZE));
+    hash_filter.MessageEnd();
+
+    hash_filter.Get(generated_signature, static_cast<size_t >(CryptoPP::SHA256::DIGESTSIZE));
+
+    bool signatures_match = true;
+    for (int i = 0; i < CryptoPP::SHA256::DIGESTSIZE; ++i) {
+        if (signature[i] != generated_signature[i]) {
+            signatures_match = false;
+            break;
+        }
+    }
+
+    delete[] message_bytes;
+
+    if (!signatures_match) {
+        delete[] encrypted_bytes;
         success = false;
         return "";
     }
-    // Convert std::string to unsigned char array.
-    const unsigned int message_len = static_cast<const unsigned int>(plain_text.length());
-    unsigned char *message = new unsigned char[message_len];
 
-    // Copy string with for loop, just in case there is a '\0' char in plain_text.
-    for (unsigned int i = 0; i < message_len; ++i) message[i] = static_cast<unsigned char>(plain_text[i]);
+    std::string decrypted_string;
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption decryption;
+    decryption.SetKeyWithIV(key, static_cast<size_t >(KEY_SIZE), iv);
 
-    // Allocate memory for encrypted message.
-    // Additional ChaCha20 - Poly1305 bytes are needed for authentication.
-    unsigned char *cipher_text = new unsigned char[message_len + crypto_aead_chacha20poly1305_ABYTES];
-    unsigned long long cipher_text_len;
+    CryptoPP::ArraySource decryption_source(encrypted_bytes, encrypted_bytes_size, true,
+                                            new CryptoPP::StreamTransformationFilter(decryption,
+                                                                                     new CryptoPP::StringSink(
+                                                                                             decrypted_string),
+                                                                                     CryptoPP::StreamTransformationFilter::PKCS_PADDING));
 
-    // Generate random nonce. It will be added at the beginning of encrypted data.
-    // (Same nonce should never be reused with same key, that's why we are generating a random one.)
-    unsigned int nonce_size = crypto_aead_chacha20poly1305_NPUBBYTES;  // 8 bytes
-    unsigned char *nonce = new unsigned char[nonce_size];
-    randombytes_buf(nonce, sizeof nonce);
+    delete[] encrypted_bytes;
 
-    // Actual encryption.
-    success = (crypto_aead_chacha20poly1305_encrypt(cipher_text, &cipher_text_len,
-                                                    message, message_len,
-                                                    nullptr, 0, nullptr, nonce, key) == 0);
-
-    delete[] message;
-
-    if (!success) {
-        // probably key was not generated or system random is not actual random.
-        delete[] cipher_text;
-        delete[] nonce;
-        return "";
-    }
-
-    // '/' is just a random char, which will be overwritten
-    // At the beginning of the string will be stored nonce and behind it encrypted message.
-    std::string cipher(nonce_size + cipher_text_len, '/');
-
-    for (unsigned int i = 0; i < nonce_size; ++i) cipher[i] = nonce[i];
-    delete[] nonce;
-    for (unsigned long long i = 0; i < cipher_text_len; ++i) cipher[i + nonce_size] = cipher_text[i];
-    delete[] cipher_text;
-
-    // encode everything in Base64 for better portability...
-    cipher = base64_encode(cipher);
-
-    return cipher;
-}
-
-std::string electronpass::Crypto::decrypt(const std::string& base64_cipher_text, bool& success) const {
-    if (!check()) {
-        success = false;
-        return "";
-    }
-    // Convert from Base64.
-    std::string cipher_text = base64_decode(base64_cipher_text);
-
-    // Get nonce from beginning of cipher_text.
-    unsigned int nonce_size = crypto_aead_chacha20poly1305_NPUBBYTES;  // 8 bytes
-    unsigned char *nonce = new unsigned char[nonce_size];
-
-    if (cipher_text.length() < nonce_size) {
-        success = false;
-        return "";
-    }
-    
-    for (unsigned int i = 0; i < nonce_size; ++i) nonce[i] = static_cast<unsigned char>(cipher_text[i]);
-
-    // Convert std::string to unsigned char array.
-    // New length will be smaller, because we won't copy first nonce_size bytes (8 bytes).
-    const unsigned int cipher_text_len = static_cast<const unsigned int>(cipher_text.length() - nonce_size);
-    unsigned char *cipher = new unsigned char[cipher_text_len];
-
-    for (unsigned int i = 0; i < cipher_text_len; ++i) cipher[i] = static_cast<unsigned char>(cipher_text[i + nonce_size]);
-    // delete string here, because it might be quite large and we are later allocating additional memory.
-    cipher_text.clear();
-
-    // Allocate memory.
-    unsigned char *plain_text = new unsigned char[cipher_text_len - crypto_aead_chacha20poly1305_ABYTES];
-    unsigned long long plain_text_len;
-
-    // Actual encryption.
-    success = (crypto_aead_chacha20poly1305_decrypt(plain_text, &plain_text_len, nullptr,
-                                                    cipher, cipher_text_len,
-                                                    nullptr, 0, nonce, key) == 0);
-    delete[] cipher;
-    delete[] nonce;
-
-    if (!success) {
-        // Probably authentication had failed.
-        // Also possible that key was not generated or that sodium was not initialized.
-        delete[] plain_text;
-        return "";
-    }
-
-    // '/' is just a random char, which will be overwritten
-    // Need to copy in for loop because otherwise '\0' would terminate copying.
-    std::string plain(plain_text_len, '/');
-
-    for (unsigned long long i = 0; i < plain_text_len; ++i) plain[i] = plain_text[i];
-    delete[] plain_text;
-
-    return plain;
-}
-
-bool electronpass::Crypto::check() const {
-    return sodium_success;
+    success = true;
+    return decrypted_string;
 }
 
 std::string electronpass::Crypto::generate_uuid() {
-    assert(sodium_init() != -1);
-
     const unsigned int uuid_size = 24; // Bytes
     unsigned char uuid[uuid_size];
-    randombytes_buf(uuid, uuid_size);
+    CryptoPP::AutoSeededRandomPool random_pool;
+    random_pool.GenerateBlock(uuid, uuid_size);
 
-    std::string uuid_str(uuid_size, '/');
-    for (unsigned long long i = 0; i < uuid_size; ++i) uuid_str[i] = uuid[i];
-    uuid_str = Crypto::base64_encode(uuid_str);
+    std::string uuid_string;
+    CryptoPP::ArraySource encoder(uuid, uuid_size, true,
+                                  new CryptoPP::Base64Encoder(new CryptoPP::StringSink(uuid_string), false));
 
-    return uuid_str;
+    return uuid_string;
 }

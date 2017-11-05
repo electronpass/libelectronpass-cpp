@@ -16,7 +16,7 @@ along with libelectronpass.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <iostream>
-#include "electronpass/serialization.hpp"
+#include "serialization.hpp"
 
 #define kWalletVersion 0
 

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "electronpass/wallet.hpp"
-#include "electronpass/serialization.hpp"
+#include "wallet.hpp"
+#include "serialization.hpp"
 
 electronpass::Wallet test_wallet() {
     electronpass::Wallet::Item google1("Google", "YTBZGOOr/w13Vef8zFkm+YHGsutFGzSp", 1493189705);

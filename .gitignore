@@ -5,6 +5,8 @@ bin/*
 cmake-build-debug/*
 docs/html/*
 docs/latex/*
+cryptopp/*
+.DS_Store
 
 # Compiled Object files
 *.slo

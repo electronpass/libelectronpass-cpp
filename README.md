@@ -5,12 +5,14 @@ Backend for electronpass-desktop that can work with the wallet format writen in 
 
 ## Dependencies
 
-- [libsodium](https://libsodium.org) - A modern and easy-to-use crypto library
+- [crypto++](https://www.cryptopp.com/) - Crypto library.
 - [jsoncpp v1.8.0](https://github.com/open-source-parsers/jsoncpp) - Already included in source code
 - [gtest](https://github.com/google/googletest) - Required for building tests. Already included in source code
 - [doxygen](http://www.stack.nl/~dimitri/doxygen/) - Required for building documentation
 
 ## Building
+Before building you should download and build the Crypto++ library. Currently used version is ```5.6.5```. We link crypto++ as a static library. You should put the header files for crypto++ in ```cryptopp/cryptopp``` and the static library itself in ```cryptopp/libcryptopp.a```. For Unix/Linux systems there is a provided script ```install_cryptopp.sh```.
+
 CMake configuration is used to create documentation and run tests.
 
 The following will build examples and tests
@@ -54,3 +56,6 @@ Code in this project is licensed under [GNU LGPLv3 license](https://github.com/e
 
 - ```include/json/*```
 - ```src/jsoncpp.cpp```
+
+## Crypto++
+[Crypto++](https://github.com/weidai11/cryptopp/) is licensed under Boost software license.
