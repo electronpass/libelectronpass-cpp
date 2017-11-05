@@ -12,7 +12,6 @@ addons:
         sources:
             - llvm-toolchain-precise
             - ubuntu-toolchain-r-test
-            - sourceline: 'ppa:chris-lea/libsodium'
             - sourceline: 'deb http://ppa.launchpad.net/chris-lea/libsodium/ubuntu trusty main'
             - sourceline: 'deb-src http://ppa.launchpad.net/chris-lea/libsodium/ubuntu trusty main'
             - sourceline: 'deb http://llvm.org/apt/trusty/ llvm-toolchain-trusty-3.8 main'
@@ -20,12 +19,14 @@ addons:
         packages:
             - clang-3.8
             - g++-5
-            - libsodium-dev
+            - wget
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ] && [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
   - if [ $TRAVIS_OS_NAME == linux ] && [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install libsodium; fi
 script:
+  - chmod +x install_cryptopp.sh
+  - ./install_cryptopp.sh
   - cmake .
   - make
   - make check
