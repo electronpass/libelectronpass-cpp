@@ -29,7 +29,7 @@ electronpass::Crypto::Crypto(const std::string &password) {
 std::string electronpass::Crypto::encrypt(const std::string &plain_text) const {
     // Generate random IV.
     CryptoPP::AutoSeededRandomPool random_pool;
-    byte iv[AES_BLOCKSIZE];
+    CryptoPP::byte iv[AES_BLOCKSIZE];
     random_pool.GenerateBlock(iv, sizeof(iv));
 
     CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption encryption;
@@ -37,7 +37,7 @@ std::string electronpass::Crypto::encrypt(const std::string &plain_text) const {
 
     // Allocate memory for cipher text
     unsigned long encrypted_size = (plain_text.size() / AES_BLOCKSIZE + 1) * AES_BLOCKSIZE;
-    auto encrypted_bytes = new byte[encrypted_size];  // Can't allocate on stack because of the standard
+    auto encrypted_bytes = new CryptoPP::byte[encrypted_size];  // Can't allocate on stack because of the standard
 
     // Put plain text into encryption algorithm.
     CryptoPP::StringSource source(plain_text, true,
@@ -53,7 +53,7 @@ std::string electronpass::Crypto::encrypt(const std::string &plain_text) const {
     hash_filter.Put(key, static_cast<size_t >(KEY_SIZE));
     hash_filter.MessageEnd();
 
-    byte signature[CryptoPP::SHA256::DIGESTSIZE];
+    CryptoPP::byte signature[CryptoPP::SHA256::DIGESTSIZE];
     hash_filter.Get(signature, static_cast<size_t >(CryptoPP::SHA256::DIGESTSIZE));
 
     // Convert encrypted_bytes to Base64, add signature and IV.
@@ -66,7 +66,7 @@ std::string electronpass::Crypto::encrypt(const std::string &plain_text) const {
     unsigned long encrypted_message_size = encoder.MaxRetrievable();
     std::string encrypted_message;
     encrypted_message.resize(encrypted_message_size);
-    encoder.Get((byte *) encrypted_message.data(), encrypted_message_size);
+    encoder.Get((CryptoPP::byte *) encrypted_message.data(), encrypted_message_size);
 
     delete[] encrypted_bytes;
 
@@ -82,11 +82,11 @@ std::string electronpass::Crypto::encrypt(const std::string &plain_text, bool &s
 std::string electronpass::Crypto::decrypt(const std::string &base64_cipher_text, bool &success) const {
     // Decode cipher_text from Base64.
     CryptoPP::Base64Decoder decoder;
-    decoder.Put((byte *) base64_cipher_text.data(), base64_cipher_text.size());
+    decoder.Put((CryptoPP::byte *) base64_cipher_text.data(), base64_cipher_text.size());
     decoder.MessageEnd();
 
     unsigned long message_byte_size = decoder.MaxRetrievable();
-    auto message_bytes = new byte[message_byte_size];
+    auto message_bytes = new CryptoPP::byte[message_byte_size];
     decoder.Get(message_bytes, message_byte_size);
 
     // Calculate where starts signature and IV.
@@ -94,26 +94,26 @@ std::string electronpass::Crypto::decrypt(const std::string &base64_cipher_text,
     unsigned long signature_beginning = iv_beginning - CryptoPP::SHA256::DIGESTSIZE;
 
     // Retrieve IV
-    byte iv[AES_BLOCKSIZE];
+    CryptoPP::byte iv[AES_BLOCKSIZE];
     for (unsigned long i = 0; i < AES_BLOCKSIZE; ++i) {
         iv[i] = message_bytes[i + iv_beginning];
     }
 
     // Retrieve signature
-    byte signature[CryptoPP::SHA256::DIGESTSIZE];
+    CryptoPP::byte signature[CryptoPP::SHA256::DIGESTSIZE];
     for (unsigned long i = 0; i < CryptoPP::SHA256::DIGESTSIZE; ++i) {
         signature[i] = message_bytes[i + signature_beginning];
     }
 
     // Retrieve cipher text
     unsigned long encrypted_bytes_size = signature_beginning;
-    auto encrypted_bytes = new byte[encrypted_bytes_size];
+    auto encrypted_bytes = new CryptoPP::byte[encrypted_bytes_size];
     for (unsigned long i = 0; i < signature_beginning; ++i) encrypted_bytes[i] = message_bytes[i];
 
     delete[] message_bytes;
 
     // Generate signature
-    byte generated_signature[CryptoPP::SHA256::DIGESTSIZE];
+    CryptoPP::byte generated_signature[CryptoPP::SHA256::DIGESTSIZE];
 
     CryptoPP::SHA256 sha256;
     CryptoPP::HashFilter hash_filter(sha256);

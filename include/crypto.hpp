@@ -48,7 +48,7 @@ namespace electronpass {
     class Crypto {
     private:
         // Key for encryption
-        byte key[KEY_SIZE];
+        CryptoPP::byte key[KEY_SIZE];
     public:
 
         /**
